@@ -21,18 +21,18 @@ public class LoginDao {
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/zenlin", "zenlin", "111784497");
+			 con = DriverManager.getConnection("jdbc:mysql://mysql4.cs.stonybrook.edu:3306/zenlin", "zenlin", "111784497");
 			System.out.print("xxxx");
-//			Statement stat = con.createStatement ();
-//			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
-//			int i=1;
-//			int j;
-//			while ( res.next ( ) ) { 
-//				j = res.getInt (i);
-//				i++;
-//				System.out.println(i+": "+j);
-//			
-//			}
+			Statement stat = con.createStatement ();
+			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
+			int i=1;
+			int j;
+			while ( res.next ( ) ) { 
+				j = res.getInt (i);
+				i++;
+				System.out.println(i+": "+j);
+			
+			}
 			
 		}catch(Exception e) {
 			System.out.println(e);
