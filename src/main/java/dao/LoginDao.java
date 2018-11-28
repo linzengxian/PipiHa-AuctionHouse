@@ -87,8 +87,21 @@ public class LoginDao {
 		 * Return "success" on successful insertion of a new user
 		 * Return "failure" for an unsuccessful database operation
 		 */
-		
-	
+		Connection con = DBUtil.getConnection();
+		String query = "INSERT INTO Account(Email, Password, Role)"
+				+ " values (?,?,?)";
+		PreparedStatement preparedStmt;
+		try {
+			preparedStmt = con.prepareStatement(query);
+			preparedStmt.setString (1, login.getUsername());
+		    preparedStmt.setString (2, login.getPassword());
+		    preparedStmt.setString (3, login.getRole());
+		    preparedStmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "error";
+		}
 		
 		/*Sample data begins*/
 		return "success";
