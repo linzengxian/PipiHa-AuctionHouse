@@ -1,5 +1,7 @@
 package dao;
 import java.sql.*;
+
+import jdbc.DBUtil;
 import model.Login;
 
 public class LoginDao {
@@ -20,19 +22,19 @@ public class LoginDao {
 		 Connection con = null;
 		try {
 			
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/zenlin", "zenlin", "111784497");
+
+			 con = DBUtil.getConnection();
 			System.out.print("xxxx");
-//			Statement stat = con.createStatement ();
-//			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
-//			int i=1;
-//			int j;
-//			while ( res.next ( ) ) { 
-//				j = res.getInt (i);
-//				i++;
-//				System.out.println(i+": "+j);
-//			
-//			}
+			Statement stat = con.createStatement ();
+			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
+			int i=1;
+			int j;
+			while ( res.next ( ) ) { 
+				j = res.getInt (i);
+				i++;
+				System.out.println(i+": "+j);
+			
+			}
 			
 		}catch(Exception e) {
 			System.out.println(e);
