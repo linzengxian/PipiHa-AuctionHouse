@@ -65,6 +65,10 @@
 	    <label for="customerTelephone">Telephone</label>
 	    <input type="text" class="form-control" id="customerTelephone" name="customerTelephone" placeholder="Telephone number" required>
 	  </div>
+	  <div class="form-group">
+	    <label for="customerSSN">SSN</label>
+	    <input type="text" class="form-control" id="customerSSN" name="customerSSN" placeholder="XXX-XX-XXXX" required>
+	  </div>
 	  
 	  <button type="submit" class="btn btn-primary">Submit</button>
 	</form>
