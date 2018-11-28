@@ -20,18 +20,18 @@ public class LoginDao {
 		
 		try {
 			
-			Class.forName("com.mysql.jdbc.com");
-			Connection con = DriverManager.getConnection("mysql4.cs.stonybrook.edu:3306", "zenlin", "111784497");
-			System.out.print("xxxx");
-			Statement stat = con.createStatement ();
-			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
-			int i=1;
-			int j;
-			while ( res.next ( ) ) { 
-				j = res.getInt (i);
-				i++;
-				System.out.println(i+": "+j);
-			
+			//Class.forName("mysql4.cs.stonybrook.edu");
+//			Connection con = DriverManager.getConnection("mysql4.cs.stonybrook.edu:3306", "zenlin", "111784497");
+//			System.out.print("xxxx");
+//			Statement stat = con.createStatement ();
+//			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
+//			int i=1;
+//			int j;
+//			while ( res.next ( ) ) { 
+//				j = res.getInt (i);
+//				i++;
+//				System.out.println(i+": "+j);
+//			
 			}
 			
 		}catch(Exception e) {
@@ -42,7 +42,8 @@ public class LoginDao {
 		/*Sample data begins*/
 		Login login = new Login();
 		login.setRole("customerRepresentative");
-	
+		//login.setRole("manager");
+		//login.setRole("fish");
 		return login;
 		/*Sample data ends*/
 		
