@@ -9,6 +9,8 @@ import model.Customer;
 
 import java.util.stream.IntStream;
 
+import jdbc.DBUtil;
+
 public class CustomerDao {
 	/*
 	 * This class handles all the database operations related to the customer table
@@ -196,6 +198,34 @@ public class CustomerDao {
 		 */
 		
 		/*Sample data begins*/
+		Connection con = DBUtil.getConnection();
+		String query = "INSERT INTO Person(SSN, LastName, FirstName, Address,City,State,ZipCode,Telephone,Email)"
+				+ " values (?,?,?,?,?,?,?,?,?)";
+		 PreparedStatement preparedStmt;
+		try {
+			preparedStmt = con.prepareStatement(query);
+			preparedStmt.setString (1, customer.getCustomerID());
+		      preparedStmt.setString (2, customer.getLastName());
+		      preparedStmt.setString (3, customer.getFirstName());
+		      preparedStmt.setString (4,customer.getAddress() );
+		      preparedStmt.setString (5,customer.getCity() );
+		      preparedStmt.setString (6,customer.getState() );
+		      preparedStmt.setInt (7,customer.getZipCode() );
+		      preparedStmt.setString (8,customer.getTelephone() );
+		      preparedStmt.setString (9,customer.getEmail() );
+		      preparedStmt.execute();
+		      query = "INSERT INTO Customer(Rating,CreditCardNum,CustomerID)"
+						+ " values (?,?,?)";
+		      preparedStmt = con.prepareStatement(query);
+		      preparedStmt.setInt (1, customer.getRating());
+		      preparedStmt.setString (2, customer.getCreditCard());
+		      preparedStmt.setString (3, customer.getCustomerID());
+		      preparedStmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      
 		return "success";
 		/*Sample data ends*/
 
