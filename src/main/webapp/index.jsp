@@ -55,6 +55,7 @@
 	            	<input type="password" class="form-control" name="password" placeholder="Password" required>
 	        	</div>
 				<input type="submit" value="Login" class="btn btn-success"/>
+				<input type="submit" value="register">
 			</form>
 		</div>
 		
