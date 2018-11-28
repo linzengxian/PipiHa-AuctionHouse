@@ -17,12 +17,12 @@ public class LoginDao {
 		 * password, which is the password of the user, is given as method parameter
 		 * Query to verify the username and password and fetch the role of the user, must be implemented
 		 */
-		
+		 Connection con = null;
 		try {
 			
-			//Class.forName("mysql4.cs.stonybrook.edu");
-//			Connection con = DriverManager.getConnection("mysql4.cs.stonybrook.edu:3306", "zenlin", "111784497");
-//			System.out.print("xxxx");
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/zenlin", "zenlin", "111784497");
+			System.out.print("xxxx");
 //			Statement stat = con.createStatement ();
 //			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
 //			int i=1;
@@ -32,12 +32,19 @@ public class LoginDao {
 //				i++;
 //				System.out.println(i+": "+j);
 //			
-			}
+//			}
 			
 		}catch(Exception e) {
 			System.out.println(e);
 			
-		}
+		}finally {
+            if (con != null) {
+                try {
+                    con.close();
+                    System.out.println("Database Connection Terminated");
+                } catch (Exception e) {}
+            }
+        }
 		
 		/*Sample data begins*/
 		Login login = new Login();
