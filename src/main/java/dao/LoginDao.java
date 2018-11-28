@@ -91,6 +91,7 @@ public class LoginDao {
 		String query = "INSERT INTO Account(Email, Password, Role)"
 				+ " values (?,?,?)";
 		PreparedStatement preparedStmt;
+		//add user
 		try {
 			preparedStmt = con.prepareStatement(query);
 			preparedStmt.setString (1, login.getUsername());
