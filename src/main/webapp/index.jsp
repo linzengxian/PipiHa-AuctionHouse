@@ -58,7 +58,7 @@
 			</form>
 			
 			
-			<form action="addCustomer.jsp" method="POST">
+			<form action="addCustomer_Register.jsp" method="POST">
 				<input type="submit" value="register"/>
 			</form>
 		</div>

@@ -1,5 +1,5 @@
 package dao;
-
+import java.sql.*;
 import model.Login;
 
 public class LoginDao {
@@ -18,10 +18,31 @@ public class LoginDao {
 		 * Query to verify the username and password and fetch the role of the user, must be implemented
 		 */
 		
+		try {
+			
+			Class.forName("com.mysql.jdbc.com");
+			Connection con = DriverManager.getConnection("mysql4.cs.stonybrook.edu:3306", "zenlin", "111784497");
+			System.out.print("xxxx");
+			Statement stat = con.createStatement ();
+			ResultSet res = stat.executeQuery ("select * from AuctionHistory");
+			int i=1;
+			int j;
+			while ( res.next ( ) ) { 
+				j = res.getInt (i);
+				i++;
+				System.out.println(i+": "+j);
+			
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
+		
 		/*Sample data begins*/
 		Login login = new Login();
-		//login.setRole("customerRepresentative");
-		login.setRole("manager");
+		login.setRole("customerRepresentative");
+		//login.setRole("manager");
 		//login.setRole("fish");
 		return login;
 		/*Sample data ends*/
