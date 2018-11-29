@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Customer;
+import model.Login;
 import model.Customer;
 
 import java.util.stream.IntStream;
@@ -104,7 +105,6 @@ public class CustomerDao {
 	}
 
 	public Customer getCustomer(String customerID) {
-
 		/*
 		 * This method fetches the customer details and returns it
 		 * customerID, which is the Customer's ID who's details have to be fetched, is given as method parameter
@@ -114,18 +114,40 @@ public class CustomerDao {
 		
 		/*Sample data begins*/
 		Customer customer = new Customer();
-		customer.setCustomerID("111-11-1111");
-		customer.setAddress("123 Success Street");
-		customer.setLastName("Lu");
-		customer.setFirstName("Shiyong");
-		customer.setCity("Stony Brook");
-		customer.setState("NY");
-		customer.setEmail("shiyong@cs.sunysb.edu");
-		customer.setZipCode(11790);
-		customer.setTelephone("5166328959");
-		customer.setCreditCard("1234567812345678");
-		customer.setRating(1);
+//		customer.setCustomerID("111-11-1111");
+//		customer.setAddress("123 Success Street");
+//		customer.setLastName("Lu");
+//		customer.setFirstName("Shiyong");
+//		customer.setCity("Stony Brook");
+//		customer.setState("NY");
+//		customer.setEmail("shiyong@cs.sunysb.edu");
+//		customer.setZipCode(11790);
+//		customer.setTelephone("5166328959");
+//		customer.setCreditCard("1234567812345678");
+//		customer.setRating(1);
 		/*Sample data ends*/
+		 String target = customerID;
+		 Connection con = null;
+		 String role;
+		
+		try {
+			con = DBUtil.getConnection();	
+			String query = "Deleted P.SSN FROM Person P WHERE P.SSN=?";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ResultSet res = ps.executeQuery ();
+			if( res.next ()) {
+				role = res.getString(1);
+				System.out.println(role);
+				
+			}else {
+				System.out.println("unknown");
+			}
+	
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		
 		
 		return customer;
 	}
