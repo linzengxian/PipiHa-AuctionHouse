@@ -1,8 +1,15 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbc.DBUtil;
 import model.Customer;
 import model.Employee;
 
@@ -20,7 +27,35 @@ public class EmployeeDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database insertion of the employee details and return "success" or "failure" based on result of the database insertion.
 		 */
-		
+		Connection con = DBUtil.getConnection();
+		String query = "INSERT INTO Person(SSN, LastName, FirstName, Address,City,State,ZipCode,Telephone,Email)"
+				+ " values (?,?,?,?,?,?,?,?,?)";
+		 PreparedStatement preparedStmt;
+		try {
+			preparedStmt = con.prepareStatement(query);
+			preparedStmt.setString (1, employee.getEmployeeID());
+		      preparedStmt.setString (2, employee.getLastName());
+		      preparedStmt.setString (3, employee.getFirstName());
+		      preparedStmt.setString (4,employee.getAddress() );
+		      preparedStmt.setString (5,employee.getCity() );
+		      preparedStmt.setString (6,employee.getState() );
+		      preparedStmt.setInt (7,employee.getZipCode() );
+		      preparedStmt.setString (8,employee.getTelephone() );
+		      preparedStmt.setString (9,employee.getEmail() );
+		      preparedStmt.execute();
+		      query = "INSERT INTO Employee(StartDate,HourlyRate,Level,EmployeeID)"
+						+ " values (?,?,?,?)";
+		      preparedStmt = con.prepareStatement(query);
+		      preparedStmt.setString(1, employee.getStartDate());
+		      preparedStmt.setDouble(2, employee.getHourlyRate());
+		      preparedStmt.setString (3, employee.getLevel());
+		      preparedStmt.setString (4, employee.getEmployeeID());
+		      preparedStmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "failure";
+		}
 		/*Sample data begins*/
 		return "success";
 		/*Sample data ends*/
@@ -48,10 +83,38 @@ public class EmployeeDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database deletion and return "success" or "failure" based on result of the database deletion.
 		 */
-		
-		/*Sample data begins*/
-		return "success";
-		/*Sample data ends*/
+			try {
+				Connection con = DBUtil.getConnection();
+				String query = "DETELE FROM Employee WHERE EmployeeID = ?";
+				PreparedStatement preparedStmt;
+				preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString (1, employeeID);
+			    preparedStmt.execute();
+			    query = "DETELE FROM Person WHERE SSN = ?";
+				preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString (1, employeeID);
+			    preparedStmt.execute();
+			    query = "SELECT Email FROM Person WHERE SSN = " + employeeID;
+			    // create the java statement
+			      Statement st = con.createStatement();
+			      // execute the query, and get a java resultset
+			      ResultSet rs = st.executeQuery(query);
+				if(rs.next()) {
+					String email = rs.getString("Email");
+					 query = "DETELE FROM Person WHERE Email = " + email;
+					 st = con.createStatement();
+					 st.executeQuery(query);
+				}
+			    
+			      
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "failure";
+			}
+			/*Sample data begins*/
+			return "success";
+			/*Sample data ends*/
 
 	}
 
