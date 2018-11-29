@@ -101,7 +101,7 @@ public class EmployeeDao {
 			      ResultSet rs = st.executeQuery(query);
 				if(rs.next()) {
 					String email = rs.getString("Email");
-					 query = "DETELE FROM Person WHERE Email = " + email;
+					 query = "DETELE FROM Account WHERE Email = " + email;
 					 st = con.createStatement();
 					 st.executeQuery(query);
 				}
