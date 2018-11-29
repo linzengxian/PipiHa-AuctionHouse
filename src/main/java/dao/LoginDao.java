@@ -22,23 +22,37 @@ public class LoginDao {
 		 String target = username;
 		 Connection con = null;
 		 String role;
+		 String pass;
 			Login login = new Login();
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT A.Role FROM Account A WHERE A.Email=?";
+			String query = "SELECT A.Role,A.Password FROM Account A WHERE A.Email=?";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			if( res.next ()) {
 				role = res.getString(1);
 				System.out.println(role);
-				login.setRole(role);
-				return login;
+				pass =res.getString(2);
+				System.out.println("password"+res.getString(2));
+				if(res.getString(2).equals(password)) {
+					login.setRole(role);
+					return login;
+				}
+				else
+				{
+					System.out.println("password is not valid");
+					login=null;
+					return login;
+				}
 			}else {
 				System.out.println("unknown");
 				login=null;
 				return login;
 			}
+			
+			
+			
 	
 			
 			

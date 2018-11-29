@@ -32,24 +32,48 @@ public class CustomerDao {
 		 * The students code to fetch data from the database based on searchKeyword will be written here
 		 * Each record is required to be encapsulated as a "Customer" class object and added to the "customers" List
 		 */
-		System.out.println("key word"+searchKeyword);
 		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Customer customer = new Customer();
-			customer.setCustomerID("111-11-1111");
-			customer.setAddress("123 Success Street");
-			customer.setLastName("Lu");
-			customer.setFirstName("Shiyong");
-			customer.setCity("Stony Brook");
-			customer.setState("NY");
-			customer.setEmail("shiyong@cs.sunysb.edu");
-			customer.setZipCode(11790);
-			customer.setTelephone("5166328959");
-			customer.setCreditCard("1234567812345678");
-			customer.setRating(1);
-			customers.add(customer);			
-		}
 		/*Sample data ends*/
+		String target = searchKeyword;
+		 Connection con = null;
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT * FROM Customer C,Person P WHERE C.CustomerID=P.SSN AND ("
+					+ "P.SSN LIKE '%"+target+"%'"
+					+ " OR P.LastName LIKE '%"+target+"%'"
+					+ " OR P.FirstName LIKE '%"+target+"%'"
+					+ " OR P.Address LIKE '%"+target+"%'"
+					+ " OR P.City LIKE '%"+target+"%'"
+					+ " OR P.State LIKE '%"+target+"%'"
+					+ " OR P.ZipCode LIKE '%"+target+"%'"
+					+ " OR P.Telephone LIKE '%"+target+"%'"
+					+ " OR P.Email LIKE '%"+target+"%'"
+					+ " OR C.CreditCardNum LIKE '%"+target+"%')";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+			Customer temp = new Customer();
+			temp.setRating(res.getInt(1));
+			temp.setCreditCard(res.getString(2));
+			temp.setCustomerID(res.getString(3));
+			temp.setLastName(res.getString(5));
+			temp.setFirstName(res.getString(6));
+			temp.setAddress(res.getString(7));
+			temp.setCity(res.getString(8));
+			temp.setState(res.getString(9));
+			temp.setZipCode(res.getInt(10));
+			temp.setTelephone(res.getString(11));
+			temp.setEmail(res.getString(12));
+			customers.add(temp);
+			System.out.println("id of the customers: "+temp.getCustomerID());
+			}
+	
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
+		
+		
 		
 		return customers;
 	}
@@ -62,7 +86,7 @@ public class CustomerDao {
 		 * The customer record is required to be encapsulated as a "Customer" class object
 		 */
 
-
+		System.out.println("money");
 		/*Sample data begins*/
 		Customer customer = new Customer();
 		customer.setCustomerID("111-11-1111");
@@ -111,20 +135,20 @@ public class CustomerDao {
 		 * The students code to fetch data from the database will be written here
 		 * The customer record is required to be encapsulated as a "Customer" class object
 		 */
-		System.out.println("ID"+ customerID);
+		System.out.println("IDxxx"+ customerID);
 		/*Sample data begins*/
 		Customer customer = new Customer();
-//		customer.setCustomerID("111-11-1111");
-//		customer.setAddress("123 Success Street");
-//		customer.setLastName("Lu");
-//		customer.setFirstName("Shiyong");
-//		customer.setCity("Stony Brook");
-//		customer.setState("NY");
-//		customer.setEmail("shiyong@cs.sunysb.edu");
-//		customer.setZipCode(11790);
-//		customer.setTelephone("5166328959");
-//		customer.setCreditCard("1234567812345678");
-//		customer.setRating(1);
+		customer.setCustomerID("111-11-1111");
+		customer.setAddress("123 Success Street");
+		customer.setLastName("Lu");
+		customer.setFirstName("Shiyong");
+		customer.setCity("Stony Brook");
+		customer.setState("NY");
+		customer.setEmail("shiyong@cs.sunysb.edu");
+		customer.setZipCode(11790);
+		customer.setTelephone("5166328959");
+		customer.setCreditCard("1234567812345678");
+		customer.setRating(1);
 		/*Sample data ends*/
 		 String target = customerID;
 		 Connection con = null;
