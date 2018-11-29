@@ -73,9 +73,9 @@
 	    <label for="customerCreditCard">Credit Card Number</label>
 	    <input type="text" class="form-control" id="customerCreditCard" name="customerCreditCard" placeholder="XXXX-XXXX-XXXX-XXXX" required>
 	  </div>
-   	  <div class="form-group">
+   	  <div class="form-group" style="display:none">
 	    <label for="customerRating">Rating</label>
-	    <input type="text" class="form-control" id="customerRating" name="customerRating" placeholder="Rating">
+	    <input type="text" class="form-control" id="customerRating" name="customerRating" placeholder="Rating" value="5">
 	  </div>
 	  
 	  <button type="submit" class="btn btn-primary">Submit</button>
