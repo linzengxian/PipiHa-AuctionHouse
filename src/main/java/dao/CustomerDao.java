@@ -32,7 +32,7 @@ public class CustomerDao {
 		 * The students code to fetch data from the database based on searchKeyword will be written here
 		 * Each record is required to be encapsulated as a "Customer" class object and added to the "customers" List
 		 */
-		
+		System.out.println("key word"+searchKeyword);
 		/*Sample data begins*/
 		for (int i = 0; i < 10; i++) {
 			Customer customer = new Customer();
@@ -111,7 +111,7 @@ public class CustomerDao {
 		 * The students code to fetch data from the database will be written here
 		 * The customer record is required to be encapsulated as a "Customer" class object
 		 */
-		
+		System.out.println("ID"+ customerID);
 		/*Sample data begins*/
 		Customer customer = new Customer();
 //		customer.setCustomerID("111-11-1111");
@@ -174,7 +174,7 @@ public class CustomerDao {
 		 * username, which is the email address of the customer, who's ID has to be returned, is given as method parameter
 		 * The Customer's ID is required to be returned as a String
 		 */
-
+			System.out.println("name"+username);
 		return "111-11-1111";
 	}
 
