@@ -215,13 +215,18 @@ public class CustomerDao {
 		      query = "INSERT INTO Customer(Rating,CreditCardNum,CustomerID)"
 						+ " values (?,?,?)";
 		      preparedStmt = con.prepareStatement(query);
+		      if(customer.getRating()>0) 
 		      preparedStmt.setInt (1, customer.getRating());
+		      else preparedStmt.setInt (1,0);
+		    	  
 		      preparedStmt.setString (2, customer.getCreditCard());
 		      preparedStmt.setString (3, customer.getCustomerID());
 		      preparedStmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//	e.printStackTrace();
+			System.out.println("invalid account information");
+			return "failure";
 		}
 		/*Sample data begins*/
 		return "success";
