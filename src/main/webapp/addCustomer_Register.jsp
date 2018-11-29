@@ -69,6 +69,14 @@
 	    <label for="customerSSN">SSN</label>
 	    <input type="text" class="form-control" id="customerSSN" name="customerSSN" placeholder="XXX-XX-XXXX" required>
 	  </div>
+	  <div class="form-group">
+	    <label for="customerCreditCard">Credit Card Number</label>
+	    <input type="text" class="form-control" id="customerCreditCard" name="customerCreditCard" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+	  </div>
+   	  <div class="form-group">
+	    <label for="customerRating">Rating</label>
+	    <input type="text" class="form-control" id="customerRating" name="customerRating" placeholder="Rating">
+	  </div>
 	  
 	  <button type="submit" class="btn btn-primary">Submit</button>
 	</form>

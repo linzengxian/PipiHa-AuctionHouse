@@ -23,57 +23,42 @@ public class LoginDao {
 		 Connection con = null;
 		 int SSN;
 			Login login = new Login();
-		try {
-			con = DBUtil.getConnection();	
-			String query = "SELECT P.SSN FROM Person P WHERE P.Email=?";
-			PreparedStatement ps = con.prepareStatement (query);
+//		try {
+//			con = DBUtil.getConnection();	
+//			String query = "SELECT P.SSN FROM Person P WHERE P.Email=?";
+//			PreparedStatement ps = con.prepareStatement (query);
+//			ps.setString(1, target);
+//			ResultSet res = ps.executeQuery ();
+//			if( res.next ()) {
+//				SSN = res.getInt(1);
+//				System.out.println(SSN);
+//			}else {
+//				System.out.println("unknown");
+//				login=null;
+//				return login;
+//			}
+//	
+//			
+//			
+//		}catch(Exception e) {
+//			System.out.println(e);
+//			
+//		}finally {
+//            if (con != null) {
+//                try {
+//                    con.close();
+//                    System.out.println("Database Connection Terminated");
+//                } catch (Exception e) {}
+//            }
+//        }
 		
-			ps.setString(1, target);
-		
-			ResultSet res = ps.executeQuery ();
-			if( res.next ()) {
-				SSN = res.getInt(1);
-				System.out.println(SSN);
-			}else {
-				System.out.println("unknown");
-				login=null;
-				return login;
-			}
-			
-			String query2 = "SELECT C.Customer FROM Customer C WHERE C.CustomerID=?";
-			PreparedStatement ps2 = con.prepareStatement (query2);
-			  ps2.setInt(1,SSN);
-			ResultSet res2 = ps2.executeQuery();
-			if(res2.next()) {
-				login.setRole("customer");
-				System.out.println("customer");
-				return login;
-			}else {
-				System.out.println("not customer");
-			}
-			
-		System.out.println("didn't find match");
-			
-			
-		}catch(Exception e) {
-			System.out.println(e);
-			
-		}finally {
-            if (con != null) {
-                try {
-                    con.close();
-                    System.out.println("Database Connection Terminated");
-                } catch (Exception e) {}
-            }
-        }
-		return login;
 		
 		/*Sample data begins*/
 		//Login login = new Login();
-		//login.setRole("customerRepresentative");
+		login.setRole("customerRepresentative");
 		//login.setRole("manager");
 		//login.setRole("fish");
-	
+			return login;
 		/*Sample data ends*/
 		
 	}
