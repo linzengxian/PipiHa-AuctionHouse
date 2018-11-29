@@ -27,7 +27,7 @@ html, body {
 }
 
 body {
-  background-image: url("./picture/beijin1.jpg");
+  background-image: url("./picture/beijin7.jpg");
     background-size:100% 100%;
    background-attachment:fixed;
 }
@@ -198,7 +198,7 @@ label span {
 	</head>
 	<body>
 <div id="wrapper" >
-  <img src="./picture/pipiha.png" style = "border-radius:50%";>
+  <img src="./picture/LOGOPIPI1.png";>
   <%
 				String email = (String)session.getAttribute("email");
 				String role = (String)session.getAttribute("role");
