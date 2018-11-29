@@ -21,41 +21,36 @@ public class LoginDao {
 		 */
 		 String target = username;
 		 Connection con = null;
-		 int SSN;
+		 String role;
 			Login login = new Login();
-//		try {
-//			con = DBUtil.getConnection();	
-//			String query = "SELECT P.SSN FROM Person P WHERE P.Email=?";
-//			PreparedStatement ps = con.prepareStatement (query);
-//			ps.setString(1, target);
-//			ResultSet res = ps.executeQuery ();
-//			if( res.next ()) {
-//				SSN = res.getInt(1);
-//				System.out.println(SSN);
-//			}else {
-//				System.out.println("unknown");
-//				login=null;
-//				return login;
-//			}
-//	
-//			
-//			
-//		}catch(Exception e) {
-//			System.out.println(e);
-//			
-//		}finally {
-//            if (con != null) {
-//                try {
-//                    con.close();
-//                    System.out.println("Database Connection Terminated");
-//                } catch (Exception e) {}
-//            }
-//        }
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT A.Role FROM Account A WHERE A.Email=?";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ResultSet res = ps.executeQuery ();
+			if( res.next ()) {
+				role = res.getString(1);
+				System.out.println(role);
+				login.setRole(role);
+				return login;
+			}else {
+				System.out.println("unknown");
+				login=null;
+				return login;
+			}
+	
+			
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
 		
 		
 		/*Sample data begins*/
 		//Login login = new Login();
-		login.setRole("customerRepresentative");
+		//login.setRole("customerRepresentative");
 		//login.setRole("manager");
 		//login.setRole("fish");
 			return login;
