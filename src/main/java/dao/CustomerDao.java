@@ -153,7 +153,7 @@ public class CustomerDao {
 		Customer temp = new Customer();
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT * FROM Person P, Customer C WHERE P.SSN = C.CustomerID P.Email=?";
+			String query = "SELECT * FROM Person P, Customer C WHERE P.SSN = C.CustomerID P.SSN=?";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
