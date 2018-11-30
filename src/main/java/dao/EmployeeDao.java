@@ -47,7 +47,7 @@ public class EmployeeDao {
 						+ " values (?,?,?,?)";
 		      preparedStmt = con.prepareStatement(query);
 		      preparedStmt.setString(1, employee.getStartDate());
-		      preparedStmt.setDouble(2, employee.getHourlyRate());
+		      preparedStmt.setFloat(2, employee.getHourlyRate());
 		      preparedStmt.setString (3, employee.getLevel());
 		      preparedStmt.setString (4, employee.getEmployeeID());
 		      preparedStmt.execute();
@@ -101,7 +101,7 @@ public class EmployeeDao {
 			      ResultSet rs = st.executeQuery(query);
 				if(rs.next()) {
 					String email = rs.getString("Email");
-					 query = "DETELE FROM Account WHERE Email = " + email;
+					 query = "DETELE FROM Account WHERE Email = " + "'" + email + "'";
 					 st = con.createStatement();
 					 st.executeQuery(query);
 				}
@@ -129,21 +129,33 @@ public class EmployeeDao {
 
 		List<Employee> employees = new ArrayList<Employee>();
 		
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Employee employee = new Employee();
-			employee.setEmail("shiyong@cs.sunysb.edu");
-			employee.setFirstName("Shiyong");
-			employee.setLastName("Lu");
-			employee.setAddress("123 Success Street");
-			employee.setCity("Stony Brook");
-			employee.setStartDate("2006-10-17");
-			employee.setState("NY");
-			employee.setZipCode(11790);
-			employee.setTelephone("5166328959");
-			employee.setEmployeeID("631-413-5555");
-			employee.setHourlyRate(100);
-			employees.add(employee);
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Person p, Employee e WHERE p.SSN = e.EmployeeID";
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				Employee employee = new Employee();
+				employee.setEmployeeID(rs.getString("SSN"));
+				employee.setLastName(rs.getString("LastName"));
+				employee.setFirstName(rs.getString("FirstName"));
+				employee.setAddress(rs.getString("Address"));
+				employee.setCity(rs.getString("City"));
+				employee.setState(rs.getString("State"));
+				employee.setZipCode(rs.getInt("ZipCode"));
+				employee.setTelephone(rs.getString("Telephone"));
+				employee.setEmail(rs.getString("Email"));
+				employee.setStartDate(rs.getString("StartDate"));
+				employee.setHourlyRate(rs.getFloat("HourlyRate"));
+				employee.setLevel(rs.getString("Level"));
+				employees.add(employee);	 
+			}
+		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		/*Sample data ends*/
 		
@@ -161,17 +173,42 @@ public class EmployeeDao {
 		Employee employee = new Employee();
 		
 		/*Sample data begins*/
-		employee.setEmail("shiyong@cs.sunysb.edu");
-		employee.setFirstName("Shiyong");
-		employee.setLastName("Lu");
-		employee.setAddress("123 Success Street");
-		employee.setCity("Stony Brook");
-		employee.setStartDate("2006-10-17");
-		employee.setState("NY");
-		employee.setZipCode(11790);
-		employee.setTelephone("5166328959");
-		employee.setEmployeeID("631-413-5555");
-		employee.setHourlyRate(100);
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Person WHERE SSN = " + employeeID;
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			if(rs.next()) {
+				employee.setEmployeeID(rs.getString("SSN"));
+				employee.setLastName(rs.getString("LastName"));
+				employee.setFirstName(rs.getString("FirstName"));
+				employee.setAddress(rs.getString("Address"));
+				employee.setCity(rs.getString("City"));
+				employee.setState(rs.getString("State"));
+				employee.setZipCode(rs.getInt("ZipCode"));
+				employee.setTelephone(rs.getString("Telephone"));
+				employee.setEmail(rs.getString("Email"));
+
+				query = "SELECT * FROM Employee WHERE EmployeeID = " + employeeID;
+				st = con.createStatement();
+				st.executeQuery(query);
+				if(rs.next()) {
+					employee.setStartDate(rs.getString("StartDate"));
+					employee.setHourlyRate(rs.getFloat("HourlyRate"));
+					employee.setLevel(rs.getString("Level"));
+				}
+				 
+			}else {
+				return null;
+			}
+		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		/*Sample data ends*/
 		
 		return employee;
@@ -202,8 +239,25 @@ public class EmployeeDao {
 		 * username, which is the Employee's email address who's Employee ID has to be fetched, is given as method parameter
 		 * The Employee ID is required to be returned as a String
 		 */
-
-		return "111-11-1111";
+		try {
+			Connection con = DBUtil.getConnection();
+			System.out.println(username);
+		    String query = "SELECT SSN FROM Person WHERE Email = " + "'" + username + "'";
+		    // create the java statement
+		      Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		      ResultSet rs = st.executeQuery(query);
+			if(rs.next()) {
+				String SSN = rs.getString("SSN");
+				return SSN;
+			}
+		    
+		      
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
