@@ -83,29 +83,32 @@ public class EmployeeDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database deletion and return "success" or "failure" based on result of the database deletion.
 		 */
+		String email;
 			try {
 				Connection con = DBUtil.getConnection();
-				String query = "DETELE FROM Employee WHERE EmployeeID = ?";
-				PreparedStatement preparedStmt;
-				preparedStmt = con.prepareStatement(query);
-				preparedStmt.setString (1, employeeID);
-			    preparedStmt.execute();
-			    query = "DETELE FROM Person WHERE SSN = ?";
-				preparedStmt = con.prepareStatement(query);
-				preparedStmt.setString (1, employeeID);
-			    preparedStmt.execute();
-			    query = "SELECT Email FROM Person WHERE SSN = " + employeeID;
-			    // create the java statement
-			      Statement st = con.createStatement();
-			      // execute the query, and get a java resultset
-			      ResultSet rs = st.executeQuery(query);
-				if(rs.next()) {
-					String email = rs.getString("Email");
-					 query = "DETELE FROM Account WHERE Email = " + "'" + email + "'";
-					 st = con.createStatement();
-					 st.executeQuery(query);
+				String query = "Select P.Email FROM Person P WHERE P.SSN="+employeeID;
+				Statement st = con.createStatement();
+				ResultSet res = st.executeQuery(query);
+				if(res.next()) {
+				email= res.getString(1);
+				}else {
+					return "failure";// no such customer exist
 				}
-			    
+				query = "DELETE FROM Account WHERE Email=?";
+				PreparedStatement ps = con.prepareStatement(query);
+				ps.setString(1, email);
+				ps.execute();
+			
+				
+				query = "DELETE FROM Employee WHERE EmployeeID=?";
+				ps = con.prepareStatement(query);
+				ps.setString(1,employeeID);
+				ps.execute();
+				
+				query = "DELETE FROM Person WHERE SSN=?";
+				ps = con.prepareStatement(query);
+				ps.setString(1,employeeID);
+				ps.execute();
 			      
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
