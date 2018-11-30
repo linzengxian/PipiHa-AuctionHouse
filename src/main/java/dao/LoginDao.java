@@ -51,11 +51,6 @@ public class LoginDao {
 				return login;
 			}
 			
-			
-			
-	
-			
-			
 		}catch(Exception e) {
 			System.out.println(e);
 			
