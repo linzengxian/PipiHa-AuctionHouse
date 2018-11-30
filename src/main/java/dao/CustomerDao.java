@@ -48,7 +48,8 @@ public class CustomerDao {
 					+ " OR P.ZipCode LIKE '%"+target+"%'"
 					+ " OR P.Telephone LIKE '%"+target+"%'"
 					+ " OR P.Email LIKE '%"+target+"%'"
-					+ " OR C.CreditCardNum LIKE '%"+target+"%')";
+					+ " OR C.CreditCardNum LIKE '%"+target+"%'"
+					+ " OR C.Rating LIKE '%"+target+"%')";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
@@ -73,8 +74,6 @@ public class CustomerDao {
 			
 		}
 		
-		
-		
 		return customers;
 	}
 
@@ -86,7 +85,6 @@ public class CustomerDao {
 		 * The customer record is required to be encapsulated as a "Customer" class object
 		 */
 
-		System.out.println("money");
 		/*Sample data begins*/
 		Customer customer = new Customer();
 		customer.setCustomerID("111-11-1111");
@@ -107,22 +105,34 @@ public class CustomerDao {
 		 * Each customer record is required to be encapsulated as a "Customer" class object and added to the "customers" List
 		 */
 
-		
 		List<Customer> customers = new ArrayList<Customer>();
+	
+		Connection con = null;
 		
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Customer customer = new Customer();
-			customer.setCustomerID("111-11-1111");
-			customer.setAddress("123 Success Street");
-			customer.setLastName("Lu");
-			customer.setFirstName("Shiyong");
-			customer.setCity("Stony Brook");
-			customer.setState("NY");
-			customer.setEmail("shiyong@cs.sunysb.edu");
-			customer.setZipCode(11790);
-			customers.add(customer);			
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT * FROM Person P WHERE P.SSN IN ( SELECT CustomerID From Customer)";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Customer temp = new Customer();
+				temp.setCustomerID(res.getString(1));
+				temp.setLastName(res.getString(2));
+				temp.setFirstName(res.getString(3));
+				temp.setAddress(res.getString(4));
+				temp.setCity(res.getString(5));
+				temp.setState(res.getString(6));
+				temp.setZipCode(res.getInt(7));
+				temp.setTelephone(res.getString(8));
+				temp.setEmail(res.getString(9));
+				customers.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
 		}
+		/*Sample data begins*/
 		/*Sample data ends*/
 		
 		return customers;
@@ -137,43 +147,38 @@ public class CustomerDao {
 		 */
 		System.out.println("IDxxx"+ customerID);
 		/*Sample data begins*/
-		Customer customer = new Customer();
-		customer.setCustomerID("111-11-1111");
-		customer.setAddress("123 Success Street");
-		customer.setLastName("Lu");
-		customer.setFirstName("Shiyong");
-		customer.setCity("Stony Brook");
-		customer.setState("NY");
-		customer.setEmail("shiyong@cs.sunysb.edu");
-		customer.setZipCode(11790);
-		customer.setTelephone("5166328959");
-		customer.setCreditCard("1234567812345678");
-		customer.setRating(1);
 		/*Sample data ends*/
-		 String target = customerID;
-		 Connection con = null;
-		 String role;
-		
+		String target = customerID;
+		Connection con = null;
+		Customer temp = new Customer();
 		try {
 			con = DBUtil.getConnection();	
-			String query = "Deleted P.SSN FROM Person P WHERE P.SSN=?";
+			String query = "SELECT * FROM Person P, Customer C WHERE P.SSN = C.CustomerID P.Email=?";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			if( res.next ()) {
-				role = res.getString(1);
-				System.out.println(role);
-				
+				temp.setRating(res.getInt(1));
+				temp.setCreditCard(res.getString(2));
+				temp.setCustomerID(res.getString(3));
+				temp.setLastName(res.getString(5));
+				temp.setFirstName(res.getString(6));
+				temp.setAddress(res.getString(7));
+				temp.setCity(res.getString(8));
+				temp.setState(res.getString(9));
+				temp.setZipCode(res.getInt(10));
+				temp.setTelephone(res.getString(11));
+				temp.setEmail(res.getString(12));
+				return temp;
 			}else {
-				System.out.println("unknown");
+				System.out.println("unknown Customer");
 			}
-	
 		}catch(Exception e) {
 			System.out.println(e);
+			
 		}
 		
-		
-		return customer;
+		return temp;
 	}
 	
 	public String deleteCustomer(String customerID) {
@@ -198,8 +203,27 @@ public class CustomerDao {
 		 * username, which is the email address of the customer, who's ID has to be returned, is given as method parameter
 		 * The Customer's ID is required to be returned as a String
 		 */
-			System.out.println("name"+username);
-		return "111-11-1111";
+		 String target = username;
+		 Connection con = null;
+	
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT C.CustomerID FROM Customer C,Person P WHERE C.CustomerID=P.SSN AND P.Email=?";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ResultSet res = ps.executeQuery ();
+			if( res.next ()) {
+				return res.getString(1);//Customer's ID
+			}else {
+				System.out.println("Didn't find the corresponding customer with that username");
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
+		
+		return "-1";
 	}
 
 
@@ -288,7 +312,7 @@ public class CustomerDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database update and return "success" or "failure" based on result of the database update.
 		 */
-		
+			System.out.println("editCustomer");
 		/*Sample data begins*/
 		return "success";
 		/*Sample data ends*/
