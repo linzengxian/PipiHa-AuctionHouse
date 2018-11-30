@@ -66,7 +66,7 @@ public class CustomerDao {
 			temp.setTelephone(res.getString(11));
 			temp.setEmail(res.getString(12));
 			customers.add(temp);
-			System.out.println("id of the customers: "+temp.getCustomerID());
+			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
 	
 		}catch(Exception e) {
@@ -190,6 +190,40 @@ public class CustomerDao {
 		 */
 
 		/*Sample data begins*/
+		String CustomerID = customerID;
+		String email;
+		Connection con = null;
+	
+		try {
+			con = DBUtil.getConnection();	
+			String query = "Select P.Email FROM Person P WHERE P.SSN="+CustomerID;
+			Statement st = con.createStatement();
+			ResultSet res = st.executeQuery(query);
+			if(res.next()) {
+			email= res.getString(1);
+			}
+			else return "failure";// no such customer exist
+			System.out.println("email"+email);
+			query = "DELETE FROM Account WHERE Email=?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, email);
+			ps.execute();
+		
+			
+			query = "DELETE FROM Customer WHERE CustomerID=?";
+			ps = con.prepareStatement(query);
+			ps.setString(1,CustomerID);
+			ps.execute();
+			
+			query = "DELETE FROM Person WHERE SSN=?";
+			ps = con.prepareStatement(query);
+			ps.setString(1,CustomerID);
+			ps.execute();
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
 		return "success";
 		/*Sample data ends*/
 		
@@ -312,7 +346,7 @@ public class CustomerDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database update and return "success" or "failure" based on result of the database update.
 		 */
-			System.out.println("editCustomer");
+		
 		/*Sample data begins*/
 		return "success";
 		/*Sample data ends*/
