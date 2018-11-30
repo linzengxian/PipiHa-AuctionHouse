@@ -39,7 +39,7 @@ body {
 	<div id="wrapper" >
 	 <img src="./picture/pipiregister.png";>
 	<div id="inputs">
-	<form action="addCustomer" method="POST">
+	<form action="Register" method="POST">
 	  <div >
 	    <input type="email" id="customerEmail" name="customerEmail" placeholder="Enter email" required>
 	  </div>

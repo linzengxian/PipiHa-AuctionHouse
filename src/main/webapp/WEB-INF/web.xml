@@ -259,6 +259,13 @@
   <servlet>
   	<description>
   	</description>
+  	<display-name>RegisterController</display-name>
+  	<servlet-name>RegisterController</servlet-name>
+  	<servlet-class>resources.RegisterController</servlet-class>
+  </servlet>
+  <servlet>
+  	<description>
+  	</description>
   	<display-name>UpdateCustomerController</display-name>
   	<servlet-name>UpdateCustomerController</servlet-name>
   	<servlet-class>resources.UpdateCustomerController</servlet-class>
@@ -406,6 +413,10 @@
   <servlet-mapping>
   	<servlet-name>AddCustomerController</servlet-name>
   	<url-pattern>/addCustomer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>RegisterController</servlet-name>
+  	<url-pattern>/Register</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>UpdateCustomerController</servlet-name>
