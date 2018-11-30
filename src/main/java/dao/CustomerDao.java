@@ -38,6 +38,31 @@ public class CustomerDao {
 		 Connection con = null;
 		try {
 			con = DBUtil.getConnection();	
+			if(target == null) {
+				String query = "SELECT * FROM Customer C,Person P WHERE C.CustomerID=P.SSN";
+				PreparedStatement ps = con.prepareStatement (query);
+				ResultSet res = ps.executeQuery ();
+				while( res.next ()) {
+				Customer temp = new Customer();
+				temp.setRating(res.getInt(1));
+				temp.setCreditCard(res.getString(2));
+				temp.setCustomerID(res.getString(3));
+				temp.setLastName(res.getString(5));
+				temp.setFirstName(res.getString(6));
+				temp.setAddress(res.getString(7));
+				temp.setCity(res.getString(8));
+				temp.setState(res.getString(9));
+				temp.setZipCode(res.getInt(10));
+				temp.setTelephone(res.getString(11));
+				temp.setEmail(res.getString(12));
+				customers.add(temp);
+				}
+				
+			}else if(target.equals("")) {
+				return customers;
+			}
+			else
+			{
 			String query = "SELECT * FROM Customer C,Person P WHERE C.CustomerID=P.SSN AND ("
 					+ "P.SSN LIKE '%"+target+"%'"
 					+ " OR P.LastName LIKE '%"+target+"%'"
@@ -68,7 +93,7 @@ public class CustomerDao {
 			customers.add(temp);
 			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
-	
+		}
 		}catch(Exception e) {
 			System.out.println(e);
 			
@@ -153,22 +178,22 @@ public class CustomerDao {
 		Customer temp = new Customer();
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT * FROM Person P, Customer C WHERE P.SSN = C.CustomerID P.SSN=?";
+			String query = "SELECT * FROM Person P, Customer C WHERE P.SSN = C.CustomerID AND C.CustomerID=?";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			if( res.next ()) {
-				temp.setRating(res.getInt(1));
-				temp.setCreditCard(res.getString(2));
-				temp.setCustomerID(res.getString(3));
-				temp.setLastName(res.getString(5));
-				temp.setFirstName(res.getString(6));
-				temp.setAddress(res.getString(7));
-				temp.setCity(res.getString(8));
-				temp.setState(res.getString(9));
-				temp.setZipCode(res.getInt(10));
-				temp.setTelephone(res.getString(11));
-				temp.setEmail(res.getString(12));
+				temp.setRating(res.getInt(10));
+				temp.setCreditCard(res.getString(11));
+				temp.setCustomerID(res.getString(1));
+				temp.setLastName(res.getString(2));
+				temp.setFirstName(res.getString(3));
+				temp.setAddress(res.getString(4));
+				temp.setCity(res.getString(5));
+				temp.setState(res.getString(6));
+				temp.setZipCode(res.getInt(7));
+				temp.setTelephone(res.getString(8));
+				temp.setEmail(res.getString(9));
 				return temp;
 			}else {
 				System.out.println("unknown Customer");
@@ -346,6 +371,12 @@ public class CustomerDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database update and return "success" or "failure" based on result of the database update.
 		 */
+		Customer temp =customer;
+		if(deleteCustomer(customer.getCustomerID()).equals("failure"))
+			return  "failure";
+		if(addCustomer(temp).equals("failure"))
+			return  "failure";
+		
 		
 		/*Sample data begins*/
 		return "success";
