@@ -40,6 +40,16 @@ body {
 	 <img src="./picture/pipiregister.png";>
 	<div id="inputs">
 	<form action="Register" method="POST">
+		<div><%	String status = request.getParameter("status");
+		if(status != null) {
+			if(status.equals("false")) {
+				out.print("Incorrect Login credentials!");
+				
+			}
+			else {
+				out.print("Some error occurred! Please try again.");
+			}
+		} %></div>
 	  <div >
 	    <input type="email" id="customerEmail" name="customerEmail" placeholder="Enter email" required>
 	  </div>

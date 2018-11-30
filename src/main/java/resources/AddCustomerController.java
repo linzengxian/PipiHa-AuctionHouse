@@ -40,7 +40,7 @@ public class AddCustomerController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
+		try {
 		String email = request.getParameter("customerEmail");
 		String password = request.getParameter("customerPassword");
 		String firstName = request.getParameter("customerFirstName");
@@ -88,6 +88,10 @@ public class AddCustomerController extends HttpServlet {
 			response.sendRedirect("addCustomer.jsp?status=error");
 		}
 
+	}catch(Exception e) {
+		System.out.println("hahahahah");
+		response.sendRedirect("addCustomer.jsp?status=error");
+	}
 	}
 
 }
