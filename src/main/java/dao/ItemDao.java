@@ -1,8 +1,12 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbc.DBUtil;
 import model.Auction;
 import model.Bid;
 import model.Employee;
@@ -103,16 +107,32 @@ public class ItemDao {
 		List<Item> items = new ArrayList<Item>();
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			item.setNumCopies(2);
-			items.add(item);
-		}
 		/*Sample data ends*/
+		
+		String target = customerID;
+		 Connection con = null;
+	
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT S.ItemID,S.Name,S.Description FROM Item S WHERE S.Type IN "
+					+ "( SELECT i.Type FROM Item i WHERE i.ItemID IN( SELECT ItemID FROM AuctionHistory  WHERE BuyerID = ? ))"
+					+ " AND (S.ItemID NOT IN( SELECT A.ItemID FROM AuctionHistory A WHERE BuyerID = ?)) ORDER BY Rand() Limit 3";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ps.setString(2, target);
+			ResultSet res = ps.executeQuery ();
+			if( res.next ()) {
+				Item item = new Item();
+				
+			}else {
+				System.out.println("Didn't find the corresponding customer with that username");
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
+		
 		
 		
 		
