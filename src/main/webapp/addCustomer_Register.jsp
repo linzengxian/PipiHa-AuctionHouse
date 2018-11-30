@@ -29,7 +29,7 @@
 
 <style class="cp-pen-styles">
 body {
-  background-image: url("./picture/beijin10.jpg");
+  background-image: url("./picture/beijin11.jpg");
     background-size:100% 100%;
    background-attachment:fixed;
 }
