@@ -13,6 +13,13 @@
 		<meta name="viewport" content="width:device-width, initial-scale=1">
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 		<title>Customer Home</title>
+		<style class="cp-pen-styles">
+body {
+  background-image: url("./picture/beijin16.jpg");
+    background-size:100% 100%;
+   background-attachment:fixed;
+}
+</style>
 	</head>
 	<body>
 	
@@ -40,7 +47,7 @@
 			
 			<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Bid History</h5>
     					<div class="container">
@@ -52,7 +59,7 @@
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">History of all auctions participated in</h5>
     					<div class="container">
@@ -63,8 +70,10 @@
 					  </div>
 					</div>
 				</div>
+				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Items sold by Seller</h5>
     					<div class="container">
@@ -76,7 +85,7 @@
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Items in Auctions</h5>
     					<div class="container">
@@ -87,8 +96,10 @@
 					  </div>
 					</div>
 				</div>
+				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Best Seller Items</h5>
     					<div class="container">
@@ -100,7 +111,7 @@
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Personalized Item Suggestion List</h5>
     					<div class="container">
@@ -111,7 +122,7 @@
 					  </div>
 					</div>
 				</div>
-				
+				</div>
 		</div>
 		<div class="container">
 			<form action="logout">

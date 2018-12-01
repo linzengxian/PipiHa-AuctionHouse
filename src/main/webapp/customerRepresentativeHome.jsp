@@ -13,6 +13,13 @@
 		<meta name="viewport" content="width:device-width, initial-scale=1">
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 		<title>Customer Representative Home</title>
+			<style class="cp-pen-styles">
+body {
+  background-image: url("./picture/beijin16.jpg");
+    background-size:100% 100%;
+   background-attachment:fixed;
+}
+</style>
 	</head>
 	<body>
 	
@@ -40,7 +47,7 @@
 			
 			<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Record a Sale</h5>
     					<div class="container">
@@ -52,7 +59,7 @@
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Manage Customer</h5>
     					<div class="container">
@@ -70,20 +77,10 @@
 					  </div>
 					</div>
 				</div>
-				<div class="col">
-					<div class="card">
-					  <div class="card-body">
-					    <h5 class="card-title">View Customer Mailing List</h5>
-    					<div class="container">
-							<form action="getCustomerMailingList">
-								<input type="submit" value="Customer Mailing List" class="btn btn-primary"/>
-							</form>
-						</div>
-					  </div>
-					</div>
 				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Suggestions for Customers</h5>
     					<div class="container">
@@ -93,9 +90,21 @@
 						</div>
 					  </div>
 					</div>
-				</div>			
+				</div>		
+				<div class="col">
+					<div >
+					  <div class="card-body">
+					    <h5 class="card-title">View Customer Mailing List</h5>
+    					<div class="container">
+							<form action="getCustomerMailingList">
+								<input type="submit" value="Customer Mailing List" class="btn btn-primary"/>
+							</form>
+						</div>
+					  </div>
+					</div>
+				</div>	
 		</div>
-		
+
 		<div class="container">
 			<form action="logout">
 				<input type="submit" value="Logout" class="btn btn-danger"/>

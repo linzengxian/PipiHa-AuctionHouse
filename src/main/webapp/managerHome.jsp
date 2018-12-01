@@ -15,7 +15,7 @@
 		<title>Manager Home</title>
 		<style class="cp-pen-styles">
 body {
-  background-image: url("./picture/beijin11.jpg");
+  background-image: url("./picture/beijin16.jpg");
     background-size:100% 100%;
    background-attachment:fixed;
 }
@@ -48,7 +48,7 @@ body {
 			
 			<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Manage Employee</h5>
     					<div class="container">
@@ -64,7 +64,7 @@ body {
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">Sales Report</h5>
     					<div class="container">
@@ -75,8 +75,10 @@ body {
 					  </div>
 					</div>
 				</div>
+				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Items</h5>
     					<div class="container">
@@ -88,7 +90,7 @@ body {
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Sales</h5>
     					<div class="container">
@@ -99,8 +101,10 @@ body {
 					  </div>
 					</div>
 				</div>
+				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Revenue Summary</h5>
     					<div class="container">
@@ -112,7 +116,7 @@ body {
 					</div>
 				</div>
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Highest Revenue Generators</h5>
     					<div class="container">
@@ -127,8 +131,10 @@ body {
 					  </div>
 					</div>
 				</div>
+				</div>
+				<div class="row">
 				<div class="col">
-					<div class="card">
+					<div >
 					  <div class="card-body">
 					    <h5 class="card-title">View Bestseller Items</h5>
     					<div class="container">
@@ -139,17 +145,19 @@ body {
 					  </div>
 					</div>
 				</div>
-				
-			</div>
-			
-			
-		</div>
+		<div class="col">
+		<div >
+		 <div class="card-body">
 		<div class="container">
 			<form action="logout">
 				<input type="submit" value="Logout" class="btn btn-danger"/>
 			</form>
 		</div>
-		
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
 		<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="webjars/bootstrap/4.1.3/bootstrap.min.js"></script>
 	</body>

@@ -22,70 +22,74 @@
 	<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />	
 	<script src="webjars/jquery/3.3.1-1/jquery.min.js"></script>
 	<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<link href="./css/register.css" rel="stylesheet" type="text/css" />
+	<style>
+body {
+  background-image: url("./picture/beijin16.jpg");
+    background-size:100% 100%;
+   background-attachment:fixed;
+}
+</style>
 </head>
 <body>
-	<div class="container">
-	
-	<h1>Add a new Customer:</h1>
-
-	<form action="addCustomer" method="POST">
-	  <div class="form-group">
-	    <label for="customerEmail">Email address</label>
-	    <input type="email" class="form-control" id="customerEmail" name="customerEmail" placeholder="Enter email" required>
+	<div id="wrapper" >
+	 <h1>Add Customer:</h1>
+	<div id="inputs">
+	<form action="AddCustomer" method="POST">
+		<div><%	String status = request.getParameter("status");
+		if(status != null) {
+			if(status.equals("false")) {
+				out.print("Incorrect Login credentials!");
+				
+			}
+			else {
+				out.print("Some error occurred! Please try again.");
+			}
+		} %></div>
+	  <div >
+	    <input type="email" id="customerEmail" name="customerEmail" placeholder="Enter email" required>
 	  </div>
-	  <div class="form-group">
-	    <label for="customerPassword">Password</label>
-	    <input type="password" class="form-control" id="customerPassword" name="customerPassword" placeholder="Password" required>
+	  <div >
+	    <input type="password" id="customerPassword" name="customerPassword" placeholder="Password" required>
 	  </div>
-  	  <div class="form-group">
-	    <label for="customerFirstName">First Name</label>
-	    <input type="text" class="form-control" id="customerFirstName" name="customerFirstName" placeholder="First Name" required>
+  	  <div >
+	    <input type="text" id="customerFirstName" name="customerFirstName" placeholder="First Name" required>
 	  </div>
-  	  <div class="form-group">
-	    <label for="customerLastName">last Name</label>
-	    <input type="text" class="form-control" id="customerLastName" name="customerLastName" placeholder="Last Name" required>
+  	  <div >
+	    <input type="text" id="customerLastName" name="customerLastName" placeholder="Last Name" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerAddress">Address</label>
-	    <input type="text" class="form-control" id="customerAddress" name="customerAddress" placeholder="Address" required>
+   	  <div >
+	    <input type="text" id="customerAddress" name="customerAddress" placeholder="Address" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerCity">City</label>
-	    <input type="text" class="form-control" id="customerCity" name="customerCity" placeholder="City" required>
+   	  <div >
+	    <input type="text" id="customerCity" name="customerCity" placeholder="City" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerState">State</label>
-	    <input type="text" class="form-control" id="customerState" name="customerState" placeholder="State" required>
+   	  <div >
+	    <input type="text" id="customerState" name="customerState" placeholder="State" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerZipcode">Zipcode</label>
-	    <input type="text" class="form-control" id="customerZipcode" name="customerZipcode" placeholder="Zipcode" required>
+   	  <div >
+	    <input type="text" id="customerZipcode" name="customerZipcode" placeholder="Zipcode" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerTelephone">Telephone</label>
-	    <input type="text" class="form-control" id="customerTelephone" name="customerTelephone" placeholder="Telephone number" required>
+   	  <div >
+	    <input type="text" id="customerTelephone" name="customerTelephone" placeholder="Telephone number" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerSSN">SSN</label>
-	    <input type="text" class="form-control" id="customerSSN" name="customerSSN" placeholder="XXX-XX-XXXX" required>
+	  <div >
+	    <input type="text" id="customerSSN" name="customerSSN" placeholder="SSN" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerCreditCard">Credit Card Number</label>
-	    <input type="text" class="form-control" id="customerCreditCard" name="customerCreditCard" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+	  <div >
+	    <input type="text" id="customerCreditCard" name="customerCreditCard" placeholder="Credit Card" required>
 	  </div>
-   	  <div class="form-group">
-	    <label for="customerRating">Rating</label>
-	    <input type="text" class="form-control" id="customerRating" name="customerRating" placeholder="Rating" required>
+   	  <div>
+	    <input type="text" id="customerRating" name="customerRating" placeholder="Rating">
 	  </div>
-	  
-	  <button type="submit" class="btn btn-primary">Submit</button>
+	  <input type="submit" value="Register">
 	</form>
-	</div>
-	<div class="container pt-1">
+	<div>
 		<form action="home.jsp">
-			<input type="submit" value="Home" class="btn btn-success"/>
+			<input type="submit" value="Home"/>
 		</form>
 	</div>
-
+</div>
+</div>
 </body>
 </html>

@@ -35,7 +35,8 @@ body {
 	<body>
 <div id="wrapper" >
   <img src="./picture/LOGOPIPI1.png";>
-  <%
+  <form action="login">
+  <div> <%
 				String email = (String)session.getAttribute("email");
 				String role = (String)session.getAttribute("role");
 			
@@ -61,8 +62,7 @@ body {
 						out.print("Some error occurred! Please try again.");
 					}
 				}
-			%>
-  <form action="login">
+			%></div>
     <div id="inputs">
       <div>
         <input type="email" name="username" placeholder="email" required>
