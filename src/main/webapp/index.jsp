@@ -25,6 +25,9 @@
 body {
   background-image: url("./picture/beijin10.jpg");
     background-size:100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
    background-attachment:fixed;
 }
 </style>
