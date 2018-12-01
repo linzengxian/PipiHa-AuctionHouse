@@ -70,7 +70,10 @@ public class EmployeeDao {
 		 * The sample code returns "success" by default.
 		 * You need to handle the database update and return "success" or "failure" based on result of the database update.
 		 */
-		
+		if(deleteEmployee(employee.getEmployeeID()).equals("failure"))
+			return  "failure";
+		if(addEmployee(employee).equals("failure"))
+			return  "failure";
 		/*Sample data begins*/
 		return "success";
 		/*Sample data ends*/
@@ -140,6 +143,9 @@ public class EmployeeDao {
 		      // execute the query, and get a java resultset
 		    ResultSet rs = st.executeQuery(query);
 			while(rs.next()) {
+				if(rs.getString("Level").equals("manager")){
+					continue;
+				}
 				Employee employee = new Employee();
 				employee.setEmployeeID(rs.getString("SSN"));
 				employee.setLastName(rs.getString("LastName"));
@@ -227,10 +233,36 @@ public class EmployeeDao {
 		Employee employee = new Employee();
 		
 		/*Sample data begins*/
-		employee.setEmail("shiyong@cs.sunysb.edu");
-		employee.setFirstName("Shiyong");
-		employee.setLastName("Lu");
-		employee.setEmployeeID("631-413-5555");
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Employee e, Person p WHERE SSN = EmployeeID AND Level = 'customerRepresentative' ORDER BY HourlyRate DESC" ;
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			if(rs.next()) {
+				employee.setStartDate(rs.getString("StartDate"));
+				employee.setHourlyRate(rs.getFloat("HourlyRate"));
+				employee.setLevel(rs.getString("Level"));
+					employee.setEmployeeID(rs.getString("SSN"));
+					employee.setLastName(rs.getString("LastName"));
+					employee.setFirstName(rs.getString("FirstName"));
+					employee.setAddress(rs.getString("Address"));
+					employee.setCity(rs.getString("City"));
+					employee.setState(rs.getString("State"));
+					employee.setZipCode(rs.getInt("ZipCode"));
+					employee.setTelephone(rs.getString("Telephone"));
+					employee.setEmail(rs.getString("Email"));
+				 
+			}else {
+				return null;
+			}
+		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		/*Sample data ends*/
 		
 		return employee;
