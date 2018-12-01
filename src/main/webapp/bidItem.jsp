@@ -40,7 +40,13 @@
 	            });
 	        });
 		</script>
-		
+		<style>
+body {
+  background-image: url("./picture/beijin16.jpg");
+    background-size:100% 100%;
+   background-attachment:fixed;
+}
+</style>
 	</head>
 	<body>
 		<div class="container">

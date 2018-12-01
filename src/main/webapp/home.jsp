@@ -13,7 +13,7 @@
 		<meta name="viewport" content="width:device-width, initial-scale=1">
 		<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
 		<title>Customer Home</title>
-		<style class="cp-pen-styles">
+		<style>
 body {
   background-image: url("./picture/beijin16.jpg");
     background-size:100% 100%;

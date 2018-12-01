@@ -21,6 +21,13 @@
 	<link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />	
 	<script src="webjars/jquery/3.3.1-1/jquery.min.js"></script>
 	<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<style>
+body {
+  background-image: url("./picture/beijin16.jpg");
+    background-size:100% 100%;
+   background-attachment:fixed;
+}
+</style>
 </head>
 <body>
 	<div class="container">
