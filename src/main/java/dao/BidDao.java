@@ -1,8 +1,13 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbc.DBUtil;
 import model.Bid;
 import model.Customer;
 
@@ -19,16 +24,47 @@ public class BidDao {
 		 * Query to get the bid history of an auction, indicated by auctionID, must be implemented
 		 */
 
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Bid bid = new Bid();
-			bid.setAuctionID(123);
-			bid.setCustomerID("123-12-1234");
-			bid.setBidTime("2008-12-11");
-			bid.setBidPrice(100);
-			bids.add(bid);			
+		String target = auctionID;
+		 Connection con = null;
+		try {
+			con = DBUtil.getConnection();	
+			if(target == null) {
+				String query = "SELECT * FROM Bid B,Person P WHERE C.CustomerID=P.SSN";
+				PreparedStatement ps = con.prepareStatement (query);
+				ResultSet res = ps.executeQuery ();
+				while( res.next ()) {
+				Bid temp = new Bid();
+				temp.setAuctionID(res.getInt(1));
+				temp.setBidPrice(res.getInt(2));
+				temp.setBidTime(res.getString(3));
+				temp.setCustomerID(res.getString(4));
+				temp.setMaxBid(res.getInt(5));
+				bids.add(temp);
+				}
+				
+			}else if(target.equals("")) {
+				return bids;
+			}
+			else
+			{
+			String query = "SELECT * FROM Bid B WHERE B.AuctionID LIKE '%"+target+"%')";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Bid temp = new Bid();
+				temp.setAuctionID(res.getInt(1));
+				temp.setBidPrice(res.getInt(2));
+				temp.setBidTime(res.getString(3));
+				temp.setCustomerID(res.getString(4));
+				temp.setMaxBid(res.getInt(5));
+				bids.add(temp);
+			//System.out.println("id of the customers: "+temp.getCustomerID());
+			}
 		}
-		/*Sample data ends*/
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
 		
 		return bids;
 	}
@@ -44,23 +80,42 @@ public class BidDao {
 		 * Query to get the bid history of all the auctions in which a customer participated, indicated by customerID, must be implemented
 		 */
 
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Bid bid = new Bid();
-			bid.setAuctionID(123);
-			bid.setCustomerID("123-12-1234");
-			bid.setBidTime("2008-12-11");
-			bid.setBidPrice(100);
-			bids.add(bid);			
+		String target = customerID;
+		 Connection con = null;
+		try {
+			con = DBUtil.getConnection();	
+			if(target == null) {
+				return bids;
+				}else if(target.equals("")) {
+				return bids;
+			}
+			else
+			{
+			String query = "SELECT * FROM Bid B WHERE B.CustomerID LIKE '%"+target+"%'";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Bid temp = new Bid();
+				temp.setAuctionID(res.getInt(1));
+				temp.setBidPrice(res.getInt(2));
+				temp.setBidTime(res.getString(3));
+				temp.setCustomerID(res.getString(4));
+				temp.setMaxBid(res.getInt(5));
+				bids.add(temp);
+			//System.out.println("id of the customers: "+temp.getCustomerID());
+			}
+		}
+		}catch(Exception e) {
+			System.out.println(e);
+			
 		}
 		/*Sample data ends*/
 		
 		return bids;
 	}
 
-	public Bid submitBid(String auctionID, String itemID, Float currentBid, Float maxBid, String customerID) {
+	public String submitBid(String auctionID, String itemID, Float currentBid, Float maxBid, String customerID) {
 		
-		Bid bid = new Bid();
 
 		/*
 		 * The students code to insert data in the database
@@ -73,14 +128,30 @@ public class BidDao {
 		 * After inserting the bid data, return the bid details encapsulated in "bid" object
 		 */
 
+		Connection con = DBUtil.getConnection();
+		String query = "INSERT INTO Bid(AuctionID, BidPrice, ItemID, Address,City,CustomerID)"
+				+ " values (?,?,?,?,?)";
+		 PreparedStatement preparedStmt;
+		try {
+			preparedStmt = con.prepareStatement(query);
+			preparedStmt.setString (1, auctionID);
+		      preparedStmt.setString (2, itemID);
+		      preparedStmt.setFloat (3, currentBid);
+		      preparedStmt.setFloat (4,maxBid);
+		      preparedStmt.setString (5,customerID);
+		      preparedStmt.execute();
+		      
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("invalid account information");
+			return "failure";
+		}
 		/*Sample data begins*/
-		bid.setAuctionID(123);
-		bid.setCustomerID("123-12-1234");
-		bid.setBidTime("2008-12-11");
-		bid.setBidPrice(currentBid);
+		return "success";
 		/*Sample data ends*/
 		
-		return bid;
+
 	}
 
 	public List<Bid> getSalesListing(String searchKeyword) {
@@ -95,14 +166,35 @@ public class BidDao {
 		 * The item name or the customer name can be searched with the provided searchKeyword
 		 */
 
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Bid bid = new Bid();
-			bid.setAuctionID(123);
-			bid.setCustomerID("123-12-1234");
-			bid.setBidTime("2008-12-11");
-			bid.setBidPrice(100);
-			bids.add(bid);			
+		String target = searchKeyword;
+		 Connection con = null;
+		try {
+			con = DBUtil.getConnection();	
+			if(target == null) {
+				return bids;
+				}else if(target.equals("")) {
+				return bids;
+			}
+			else
+			{
+			String query = "SELECT * FROM AuctionHistory A Item I WHERE I.Name LIKE '%"+target+"%' AND("
+							+ "I.ItemID = A.ItemID ";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Bid temp = new Bid();
+				temp.setAuctionID(res.getInt(1));
+				temp.setBidPrice(res.getInt(2));
+				temp.setBidTime(res.getString(3));
+				temp.setCustomerID(res.getString(4));
+				temp.setMaxBid(res.getInt(5));
+				bids.add(temp);
+			//System.out.println("id of the customers: "+temp.getCustomerID());
+			}
+		}
+		}catch(Exception e) {
+			System.out.println(e);
+			
 		}
 		/*Sample data ends*/
 		
