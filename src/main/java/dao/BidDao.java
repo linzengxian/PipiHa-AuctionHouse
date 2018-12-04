@@ -29,19 +29,7 @@ public class BidDao {
 		try {
 			con = DBUtil.getConnection();	
 			if(target == null) {
-				String query = "SELECT * FROM Bid B,Person P WHERE C.CustomerID=P.SSN";
-				PreparedStatement ps = con.prepareStatement (query);
-				ResultSet res = ps.executeQuery ();
-				while( res.next ()) {
-				Bid temp = new Bid();
-				temp.setAuctionID(res.getInt(1));
-				temp.setBidPrice(res.getInt(2));
-				temp.setBidTime(res.getString(3));
-				temp.setCustomerID(res.getString(4));
-				temp.setMaxBid(res.getInt(5));
-				bids.add(temp);
-				}
-				
+				return bids;
 			}else if(target.equals("")) {
 				return bids;
 			}
@@ -129,16 +117,15 @@ public class BidDao {
 		 */
 
 		Connection con = DBUtil.getConnection();
-		String query = "INSERT INTO Bid(AuctionID, BidPrice, ItemID, Address,City,CustomerID)"
-				+ " values (?,?,?,?,?)";
+		String query = "INSERT INTO Bid(AuctionID, BidPrice, ItemID,CustomerID)"
+				+ " values (?,?,?,?)";
 		 PreparedStatement preparedStmt;
 		try {
 			preparedStmt = con.prepareStatement(query);
 			preparedStmt.setString (1, auctionID);
 		      preparedStmt.setString (2, itemID);
 		      preparedStmt.setFloat (3, currentBid);
-		      preparedStmt.setFloat (4,maxBid);
-		      preparedStmt.setString (5,customerID);
+		      preparedStmt.setString (4,customerID);
 		      preparedStmt.execute();
 		      
 		} catch (SQLException e) {
@@ -177,8 +164,11 @@ public class BidDao {
 			}
 			else
 			{
-			String query = "SELECT * FROM AuctionHistory A Item I WHERE I.Name LIKE '%"+target+"%' AND("
-							+ "I.ItemID = A.ItemID ";
+			String query = "SELECT AuctionID, BidPrice, BidTime, CustomerID,BidingPrice FROM AuctionHistory H,Item I,Customer C,Bid B WHERE I.Name LIKE '%"+target+"%'  AND("
+							+ "OR C.Name LIKE '%"+target+"%' "
+							+ "AND I.ItemID = H.ItemID "
+							+ "AND C.CustomerID = B.CustomerID "
+							+ "AND H.AuctionID = B.AuctionID)";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
