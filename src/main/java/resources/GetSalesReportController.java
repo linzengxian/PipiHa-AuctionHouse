@@ -36,7 +36,7 @@ public class GetSalesReportController extends HttpServlet {
 		// TODO Auto-generated method stub
 		String year = request.getParameter("year");
 		String month = request.getParameter("month");
-		String expireDate = year + "" + month;
+		String expireDate = month + "-" + year;
 		
 		Post post = new Post();
 		post.setExpireDate(expireDate);

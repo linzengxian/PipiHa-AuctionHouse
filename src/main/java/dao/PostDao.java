@@ -1,8 +1,12 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbc.DBUtil;
 import model.Employee;
 import model.Item;
 import model.Post;
@@ -22,14 +26,33 @@ public class PostDao {
 		 */
 
 		List<Item> items = new ArrayList<Item>();
-				
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Item item = new Item();
-			item.setName("Sample item");
-			item.setSoldPrice(100);
-			items.add(item);
+		try {
+			Connection con = DBUtil.getConnection();
+			String[] monthYear = post.getExpireDate().split("-");
+		    String query = "SELECT * FROM AuctionHistory WHERE YEAR(Date) = " + monthYear[1] + " AND MONTH(Date) = " + monthYear[0];
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+		    System.out.println("xxxxxxx");
+		    while(rs.next()) {
+		    	System.out.println("xxxxxxx");
+		    	Item item = new Item();
+		    	item.setSoldPrice((int)rs.getDouble("BidingPrice"));
+		    	query = "SELECT Name FROM Item WHERE ItemID = " + rs.getInt("ItemID");
+		    	st = con.createStatement();
+			      // execute the query, and get a java resultset
+			    rs = st.executeQuery(query);
+			    if(rs.next()) {
+			    	item.setName(rs.getString("Name"));
+			    }
+				items.add(item);
+		    }
+		}catch(Exception e) {
+			return null;
 		}
+		/*Sample data begins*/
+	
 		/*Sample data ends*/
 		
 
