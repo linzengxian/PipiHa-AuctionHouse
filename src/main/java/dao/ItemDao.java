@@ -344,7 +344,7 @@ public class ItemDao {
 				
 				Auction auction = new Auction();
 				auction.setMinimumBid(res.getFloat(6));
-				auction.setBidIncrement(7);
+				auction.setBidIncrement(res.getFloat(7));
 				auctions.add(auction);
 			
 			}
@@ -398,7 +398,7 @@ public class ItemDao {
 				Auction auction = new Auction();
 				auction.setAuctionID(res.getInt("AuctionID"));
 				auction.setMinimumBid(res.getFloat(6));
-				auction.setBidIncrement(7);
+				auction.setBidIncrement(res.getFloat(7));
 				auctions.add(auction);
 			}
 		}catch(Exception e) {
