@@ -59,10 +59,11 @@ public class ItemDao {
 
 		List<Item> items = new ArrayList<Item>();
 		Connection con = null;
-		
 		/*Sample data begins*/
 		try {
-			con = DBUtil.getConnection();	
+			
+			con = DBUtil.getConnection();
+			/*
 			String query = "CREATE OR REPLACE VIEW Sold (CustomerID, AuctionID, SoldPrice)"
 					+ "AS"
 					+ "SELECT B1.CustomerID, B1.AuctionID, B1.BidPrice AS SoldPrice"
@@ -74,15 +75,17 @@ public class ItemDao {
 					+ "WHERE S.AuctionID = A.AuctionID AND A.ItemID = I.ItemID"
 					+ "GROUP BY I.ItemID"
 					+ "ORDER BY CountItem";
+					*/
+			String query = "SELECT *,COUNT(I.ItemID) CountItem FROM AuctionHistory A, item I WHERE A.ItemID = I.ItemID GROUP BY I.ItemID ORDER BY CountItem DESC LIMIT 10";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery();
 			while( res.next ()) {
 				Item temp = new Item();
-				temp.setItemID(res.getInt(1));
-				temp.setDescription(res.getString(2));
-				temp.setName(res.getString(3));
-				temp.setType(res.getString(4));
-				temp.setNumCopies(res.getInt(5));
+				temp.setItemID(res.getInt("ItemID"));
+				temp.setDescription(res.getString("Description"));
+				temp.setName(res.getString("Name"));
+				temp.setType(res.getString("Type"));
+				temp.setNumCopies(res.getInt("NumCopies"));
 				items.add(temp);
 			}
 			
@@ -333,7 +336,7 @@ public class ItemDao {
 		try {
 			con = DBUtil.getConnection();	
 			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
-					+ " FROM Item,Auction where Item.Name LIKE'%"+target+"%' and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+					+ " FROM Item,Auction where Item.Name LIKE'%"+target+"%' and Item.ItemID=Auction.ItemID and Auction.AuctionID NOT IN (SELECT AuctionID from AuctionHistory)";
 			PreparedStatement ps = con.prepareStatement (query);
 			//ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
@@ -378,14 +381,15 @@ public class ItemDao {
 		List<Item> items = new ArrayList<Item>();
 		List<Auction> auctions = new ArrayList<Auction>();
 		
+		System.out.println(itemType);
 		Connection con = null;
 		String target = itemType;
 		int item_id=0;
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT A.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
-					+ " FROM Item I,Auction A where I.Type=? AND I.ItemID=A.ItemID AND I.ItemID NOT IN (SELECT H.ItemID from AuctionHistory H)";
+			String query = "SELECT A.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement,AuctionID"
+					+ " FROM Item I,Auction A where I.Type=? AND I.ItemID=A.ItemID AND A.AuctionID NOT IN (SELECT H.AuctionID from AuctionHistory H)";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
@@ -399,6 +403,7 @@ public class ItemDao {
 				items.add(temp);
 				
 				Auction auction = new Auction();
+				auction.setAuctionID(res.getInt("AuctionID"));
 				auction.setMinimumBid(res.getFloat(6));
 				auction.setBidIncrement(7);
 				auctions.add(auction);

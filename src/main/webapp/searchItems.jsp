@@ -72,7 +72,7 @@ body {
 			</div>				
 		</div>
 		<div class="container pt-1">
-			<form action="home">
+			<form action="home.jsp">
 				<input type="submit" value="Home" class="btn btn-success"/>
 			</form>
 		</div>

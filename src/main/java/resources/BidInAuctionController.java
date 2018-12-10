@@ -43,7 +43,6 @@ public class BidInAuctionController extends HttpServlet {
 		
 		String auctionID = request.getParameter("auctionID");
 		String itemID = request.getParameter("itemID");
-		
 		AuctionDao auctionDao = new AuctionDao();
 		List data = auctionDao.getAuctionData(auctionID, itemID);
 		

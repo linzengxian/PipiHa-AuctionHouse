@@ -29,26 +29,27 @@ public class PostDao {
 		try {
 			Connection con = DBUtil.getConnection();
 			String[] monthYear = post.getExpireDate().split("-");
-		    String query = "SELECT * FROM AuctionHistory WHERE YEAR(Date) = " + monthYear[1] + " AND MONTH(Date) = " + monthYear[0];
+			System.out.println(monthYear[0] + " " + monthYear[1]);
+		    String query = "SELECT * FROM AuctionHistory WHERE YEAR(Date) = " +
+		    				monthYear[1] + " AND MONTH(Date) = " + monthYear[0];
 		    // create the java statement
 		    Statement st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    ResultSet rs = st.executeQuery(query);
-		    System.out.println("xxxxxxx");
 		    while(rs.next()) {
-		    	System.out.println("xxxxxxx");
 		    	Item item = new Item();
 		    	item.setSoldPrice((int)rs.getDouble("BidingPrice"));
 		    	query = "SELECT Name FROM Item WHERE ItemID = " + rs.getInt("ItemID");
-		    	st = con.createStatement();
+		    	Statement ist = con.createStatement();
 			      // execute the query, and get a java resultset
-			    rs = st.executeQuery(query);
-			    if(rs.next()) {
-			    	item.setName(rs.getString("Name"));
+		    	ResultSet irs = ist.executeQuery(query);
+			    if(irs.next()) {
+			    	item.setName(irs.getString("Name"));
 			    }
 				items.add(item);
 		    }
 		}catch(Exception e) {
+			System.out.println(e.getMessage());
 			return null;
 		}
 		/*Sample data begins*/
