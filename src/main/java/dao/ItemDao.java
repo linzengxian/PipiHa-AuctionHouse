@@ -285,7 +285,7 @@ public class ItemDao {
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT * FROM Item I";
+			String query = "SELECT * FROM Item I GROUP BY I.Type";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
