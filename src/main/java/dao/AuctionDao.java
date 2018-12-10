@@ -130,6 +130,7 @@ public class AuctionDao {
 				auctions.add(auction);
 			}
 			}catch(Exception e) {
+				System.out.println(e.getMessage());
 				return null;
 			}
 		/*Sample data ends*/
