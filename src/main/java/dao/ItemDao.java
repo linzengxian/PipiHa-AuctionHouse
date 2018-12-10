@@ -26,19 +26,27 @@ public class ItemDao {
 		List<Item> items = new ArrayList<Item>();
 				
 		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			item.setNumCopies(2);
-			items.add(item);
-		}
-		/*Sample data ends*/
+		Connection con = null;
 		
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT * FROM Item I";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);	
+		}
 		return items;
-
 	}
 	
 	public List<Item> getBestsellerItems() {
@@ -50,20 +58,37 @@ public class ItemDao {
 		 */
 
 		List<Item> items = new ArrayList<Item>();
-		
+		Connection con = null;
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 5; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			item.setNumCopies(2);
-			items.add(item);
+		try {
+			con = DBUtil.getConnection();	
+			String query = "CREATE OR REPLACE VIEW Sold (CustomerID, AuctionID, SoldPrice)"
+					+ "AS"
+					+ "SELECT B1.CustomerID, B1.AuctionID, B1.BidPrice AS SoldPrice"
+					+ "FROM Bid B1"
+					+ "WHERE B1.BidTime > 'Today' AND B1.BidPrice >="
+					+ "ALL (SELECT B2.BidPrice FROM Bid B2 WHERE B1.AuctionID =B2.AuctionID)"
+					+ "SELECT I.ItemID, Count(I.ItemID) AS CountItem"
+					+ "FROM Sold S, Auction A, Item I"
+					+ "WHERE S.AuctionID = A.AuctionID AND A.ItemID = I.ItemID"
+					+ "GROUP BY I.ItemID"
+					+ "ORDER BY CountItem";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);	
 		}
-		/*Sample data ends*/
-		
 		return items;
 
 	}
@@ -78,16 +103,33 @@ public class ItemDao {
 		 */
 
 		List<Item> items = new ArrayList<Item>();
-				
+		Connection con = null;
 		/*Sample data begins*/
-		for (int i = 0; i < 6; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			item.setSoldPrice(150);
-			items.add(item);
+		try {
+			con = DBUtil.getConnection();	
+			String query = "CREATE VIEW Sold (CustomerID, AuctionID, SoldPrice)"
+					+ "AS"
+					+ "SELECT B1.CustomerID, B1.AuctionID, B1.BidPrice AS SoldPrice"
+					+ "FROM Bid B1"
+					+ "WHERE B1.BidTime > 'Today' AND B1.BidPrice >="
+					+ "ALL (SELECT B2.BidPrice FROM Bid B2 WHERE B1.AuctionID =B2.AuctionID)"
+					+ "SELECT SUM(S.SoldPrice)"
+					+ "FROM Sold S, Auction A, Item I"
+					+ "WHERE I.Name = 'Book' AND S.AuctionID = A.AuctionID AND I.ItemID = A.ItemID";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);	
 		}
 		/*Sample data ends*/
 		
@@ -161,24 +203,26 @@ public class ItemDao {
 		List<Auction> auctions = new ArrayList<Auction>();
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			items.add(item);
+		Connection con = null;
+
+		/*Sample data begins*/
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
 			
-			Bid bid = new Bid();
-			bid.setCustomerID("123-12-1234");
-			bid.setBidPrice(120);
-			bids.add(bid);
-			
-			Auction auction = new Auction();
-			auction.setMinimumBid(100);
-			auction.setBidIncrement(10);
-			auction.setAuctionID(123);
-			auctions.add(auction);
+		}catch(Exception e) {
+			System.out.println(e);	
 		}
 		/*Sample data ends*/
 		
