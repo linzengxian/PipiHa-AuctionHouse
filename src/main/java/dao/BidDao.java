@@ -35,23 +35,23 @@ public class BidDao {
 			}
 			else
 			{
-			String query = "SELECT * FROM Bid B WHERE B.AuctionID LIKE '%"+target+"%')";
+			String query = "SELECT * FROM Bid B WHERE B.AuctionID = " + target;
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Bid temp = new Bid();
-				temp.setAuctionID(res.getInt(1));
-				temp.setBidPrice(res.getInt(2));
-				temp.setBidTime(res.getString(3));
-				temp.setCustomerID(res.getString(4));
-				temp.setMaxBid(res.getInt(5));
+				temp.setAuctionID(res.getInt("AuctionID"));
+				temp.setBidPrice((int)res.getDouble("BidPrice"));
+				temp.setBidTime(String.valueOf(res.getTimestamp("BidTime")));
+				temp.setCustomerID(String.valueOf(res.getInt("BuyerID")));
+				temp.setMaxBid((int)res.getDouble("CurrentHighBid"));
 				bids.add(temp);
 			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
 		}
 		}catch(Exception e) {
 			System.out.println(e);
-			
+			return null;
 		}
 		
 		return bids;
@@ -79,23 +79,23 @@ public class BidDao {
 			}
 			else
 			{
-			String query = "SELECT * FROM Bid B WHERE B.CustomerID LIKE '%"+target+"%'";
+			String query = "SELECT * FROM Bid B WHERE B.CustomerID = " + target;
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Bid temp = new Bid();
-				temp.setAuctionID(res.getInt(1));
-				temp.setBidPrice(res.getInt(2));
-				temp.setBidTime(res.getString(3));
-				temp.setCustomerID(res.getString(4));
-				temp.setMaxBid(res.getInt(5));
+				temp.setAuctionID(res.getInt("AuctionID"));
+				temp.setBidPrice((int)res.getDouble("BidPrice"));
+				temp.setBidTime(String.valueOf(res.getTimestamp("BidTime")));
+				temp.setCustomerID(customerID);
+				temp.setMaxBid((int)res.getDouble("CurrentHighBid"));
 				bids.add(temp);
 			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
 		}
 		}catch(Exception e) {
 			System.out.println(e);
-			
+			return null;
 		}
 		/*Sample data ends*/
 		
@@ -118,6 +118,9 @@ public class BidDao {
 		Bid bid = new Bid();
 		Connection con = DBUtil.getConnection();
 		System.out.println(currentBid + "  " + maxBid);
+		if(maxBid < currentBid) {
+			return null;
+		}
 		String query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
 				+ " values (?,?,?,?,?,?)";
 		 PreparedStatement preparedStmt;
@@ -182,7 +185,7 @@ public class BidDao {
 		}
 		}catch(Exception e) {
 			System.out.println(e);
-			
+			return null;
 		}
 		/*Sample data ends*/
 		
