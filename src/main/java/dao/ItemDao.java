@@ -232,8 +232,10 @@ public class ItemDao {
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT Item.ItemID,Item.Description,Item.Name,Item.Type,Bid.CurrentHighBid,Bid.CustomerID,Auction.MinimuBid,Auction.BidIncrement"
-					+ " FROM Item,Auction,Bid,Post where Post.CustomerID = ? and Post.AuctionID = Auction.AuctionID and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+			String query = "SELECT I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement,Count(I.ItemID) AS CountItem"
+					+ " FROM Item I,Post P,Auction A,Bid B WHERE A.AuctionID = P.AuctionID AND A.ItemID=I.ItemID AND B.AuctionID = P.AuctionID AND P.CustomerID=?"
+					+ " GROUP BY I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement"
+					+ " ORDER BY CountItem DESC";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
@@ -247,12 +249,12 @@ public class ItemDao {
 				
 				Bid bid = new Bid();
 				bid.setCustomerID(res.getString(6));
-				bid.setBidPrice(res.getFloat(7));
+				bid.setBidPrice(res.getFloat(5));
 				bids.add(bid);
 				
 				Auction auction = new Auction();
-				auction.setMinimumBid(res.getFloat(8));
-				auction.setBidIncrement(9);
+				auction.setMinimumBid(res.getFloat(7));
+				auction.setBidIncrement(res.getFloat(8));
 				auctions.add(auction);
 			
 			}
