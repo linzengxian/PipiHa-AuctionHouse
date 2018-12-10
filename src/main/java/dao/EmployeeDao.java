@@ -235,15 +235,19 @@ public class EmployeeDao {
 		/*Sample data begins*/
 		try {
 			Connection con = DBUtil.getConnection();
-		    String query = "SELECT * FROM Employee e, Person p WHERE SSN = EmployeeID AND Level = 'customerRepresentative' ORDER BY HourlyRate DESC" ;
+		    String query = "SELECT EmployeeID, SUM(BidingPrice) AS Revenue FROM AuctionHistory GROUP BY EmployeeID ORDER BY Revenue DESC LIMIT 1" ;
 		    // create the java statement
 		    Statement st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    ResultSet rs = st.executeQuery(query);
 			if(rs.next()) {
-				employee.setStartDate(rs.getString("StartDate"));
-				employee.setHourlyRate(rs.getFloat("HourlyRate"));
-				employee.setLevel(rs.getString("Level"));
+				int employeeID = rs.getInt("EmployeeID");
+				query = "SELECT * FROM Person p,Employee e WHERE p.SSN = e.EmployeeID AND e.EmployeeID =" + employeeID;
+				rs = st.executeQuery(query);
+				if(rs.next()) {
+					employee.setStartDate(rs.getString("StartDate"));
+					employee.setHourlyRate(rs.getFloat("HourlyRate"));
+					employee.setLevel(rs.getString("Level"));
 					employee.setEmployeeID(rs.getString("SSN"));
 					employee.setLastName(rs.getString("LastName"));
 					employee.setFirstName(rs.getString("FirstName"));
@@ -253,7 +257,9 @@ public class EmployeeDao {
 					employee.setZipCode(rs.getInt("ZipCode"));
 					employee.setTelephone(rs.getString("Telephone"));
 					employee.setEmail(rs.getString("Email"));
-				 
+				}else {
+					return null;
+				}
 			}else {
 				return null;
 			}
