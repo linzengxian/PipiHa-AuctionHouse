@@ -306,7 +306,7 @@ public class CustomerDao {
 			
 		}
 		
-		return "-1";
+		return "failure";
 	}
 
 

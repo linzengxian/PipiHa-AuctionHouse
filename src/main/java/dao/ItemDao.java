@@ -316,10 +316,10 @@ public class ItemDao {
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncremente"
-					+ " FROM Item,Auction where Item.Name=? and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
+					+ " FROM Item,Auction where Item.Name LIKE'%"+target+"%' and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
 			PreparedStatement ps = con.prepareStatement (query);
-			ps.setString(3, target);
+			//ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Item temp = new Item();
@@ -368,8 +368,8 @@ public class ItemDao {
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
-					+ " FROM Item,Auction where Item.Type=? and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+			String query = "SELECT A.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
+					+ " FROM Item I,Auction A where I.Type=? AND I.ItemID=A.ItemID AND I.ItemID NOT IN (SELECT H.ItemID from AuctionHistory H)";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
@@ -433,13 +433,13 @@ public class ItemDao {
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT I.ItemID,Description,Name,Type,NumCopies"
-					+ "FROM Item I,AuctionHistory H,Auction A where H.SellerID= ? and I.ItemID=H.ItemID and A.ItemID=I.ItemID "
-					+ "GROUP BY I.ItemID"
-					+ "ORDER BY NumCopies DESC";
+			String query = "SELECT I.ItemID,Description,Name,Type,NumCopies,Count(I.ItemID) AS CountItem"
+					+ " FROM Item I,AuctionHistory H,Auction A WHERE I.ItemID=H.ItemID AND A.ItemID=I.ItemID AND H.SellerID=?"
+					+ " GROUP BY I.ItemID,Description,Name,Type,NumCopies"
+					+ " ORDER BY CountItem DESC";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
-			ResultSet res = ps.executeQuery ();
+			ResultSet res = ps.executeQuery();
 			while( res.next ()) {
 				Item temp = new Item();
 				temp.setItemID(res.getInt(1));
@@ -453,20 +453,8 @@ public class ItemDao {
 		}catch(Exception e) {
 			System.out.println(e);	
 		}
-		/*Sample data begins*/
-//		for (int i = 0; i < 6; i++) {
-//			Item item = new Item();
-//			item.setItemID(123);
-//			item.setDescription("sample description");
-//			item.setType("BOOK");
-//			item.setName("Sample Book");
-//			item.setNumCopies(50);
-//			items.add(item);
-//		}
-		/*Sample data ends*/
 		
 		return items;
 
 	}
-
 }
