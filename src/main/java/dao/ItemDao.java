@@ -429,10 +429,10 @@ public class ItemDao {
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT I.ItemID,Description,Name,Type,NumCopies,Count(I.ItemID) AS CountItem"
+			String query = "SELECT I.ItemID,Description,Name,Type,Sum(A.Copies_Sold) AS Copy_Sold,Count(I.ItemID) AS CountItem"
 					+ " FROM Item I,AuctionHistory H,Auction A WHERE I.ItemID=H.ItemID AND A.ItemID=I.ItemID AND H.SellerID=?"
-					+ " GROUP BY I.ItemID,Description,Name,Type,NumCopies"
-					+ " ORDER BY CountItem DESC";
+					+ " GROUP BY I.ItemID,Description,Name,Type"
+					+ " ORDER BY Copy_Sold DESC";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery();
