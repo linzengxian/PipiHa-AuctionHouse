@@ -59,7 +59,6 @@ public class ItemDao {
 
 		List<Item> items = new ArrayList<Item>();
 		Connection con = null;
-		System.out.println("dddddddddd");
 		/*Sample data begins*/
 		try {
 			
