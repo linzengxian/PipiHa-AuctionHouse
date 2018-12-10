@@ -154,32 +154,28 @@ public class BidDao {
 		 */
 
 		String target = searchKeyword;
-		 Connection con = null;
+		Connection con = null;
 		try {
 			con = DBUtil.getConnection();	
 			if(target == null) {
 				return bids;
-				}else if(target.equals("")) {
+			}else if(target.equals("")) {
 				return bids;
 			}
-			else
-			{
-			String query = "SELECT AuctionID, BidPrice, BidTime, CustomerID,BidingPrice FROM AuctionHistory H,Item I,Customer C,Bid B WHERE I.Name LIKE '%"+target+"%'  AND("
-							+ "OR C.Name LIKE '%"+target+"%' "
-							+ "AND I.ItemID = H.ItemID "
-							+ "AND C.CustomerID = B.CustomerID "
-							+ "AND H.AuctionID = B.AuctionID)";
+			else{
+			String query = "SELECT * FROM AuctionHistory WHERE ItemID IN (SELECT ItemID FROM Item WHERE Name LIKE '%" + target + "%')" +
+			"OR BuyerID IN(SELECT SSN FROM Person WHERE FirstName LIKE '%" + target + "%' OR LastName LIKE '%" + target + "%')" + 
+			"OR SellerID IN(SELECT SSN FROM Person WHERE FirstName LIKE '%" + target + "%' OR LastName LIKE '%" + target + "%')";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Bid temp = new Bid();
-				temp.setAuctionID(res.getInt(1));
-				temp.setBidPrice(res.getInt(2));
-				temp.setBidTime(res.getString(3));
-				temp.setCustomerID(res.getString(4));
-				temp.setMaxBid(res.getInt(5));
+				temp.setAuctionID(res.getInt("AuctionID"));
+				temp.setBidPrice(res.getInt("BidingPrice"));
+				temp.setBidTime(String.valueOf(res.getDate("Date")));
+				temp.setCustomerID(String.valueOf(res.getInt("BuyerID")));
+				temp.setMaxBid(res.getInt("BidingPrice"));
 				bids.add(temp);
-			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
 		}
 		}catch(Exception e) {
