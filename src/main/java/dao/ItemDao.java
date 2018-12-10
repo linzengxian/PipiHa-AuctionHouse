@@ -266,6 +266,7 @@ public class ItemDao {
 				Auction auction = new Auction();
 				auction.setMinimumBid(res.getFloat(7));
 				auction.setBidIncrement(res.getFloat(8));
+				auction.setAuctionID(res.getInt(9));
 				auctions.add(auction);
 			
 			}
