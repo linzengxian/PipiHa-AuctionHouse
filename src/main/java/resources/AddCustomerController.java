@@ -69,8 +69,9 @@ public class AddCustomerController extends HttpServlet {
 		
 		CustomerDao customerDao = new CustomerDao();
 		String result = customerDao.addCustomer(customer);
-		
+		System.out.println("add person and customer");
 		if(result.equals("success")) {
+			System.out.println("add account");
 			Login login = new Login();
 			login.setUsername(email);
 			login.setPassword(password);
