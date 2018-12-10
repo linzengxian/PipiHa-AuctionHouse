@@ -135,7 +135,6 @@ public class ItemDao {
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
-			Customer temp = new Customer();
 			Item temp1 = new Item();
 			temp1.setItemID(res.getInt(1));
 			temp1.setDescription(res.getString(2));
@@ -431,7 +430,6 @@ public class ItemDao {
 		String target = customerID;
 		
 		Connection con = null;
-		
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
