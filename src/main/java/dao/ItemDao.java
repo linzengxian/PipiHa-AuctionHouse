@@ -59,10 +59,12 @@ public class ItemDao {
 
 		List<Item> items = new ArrayList<Item>();
 		Connection con = null;
-		
+		System.out.println("dddddddddd");
 		/*Sample data begins*/
 		try {
-			con = DBUtil.getConnection();	
+			
+			con = DBUtil.getConnection();
+			/*
 			String query = "CREATE OR REPLACE VIEW Sold (CustomerID, AuctionID, SoldPrice)"
 					+ "AS"
 					+ "SELECT B1.CustomerID, B1.AuctionID, B1.BidPrice AS SoldPrice"
@@ -74,15 +76,17 @@ public class ItemDao {
 					+ "WHERE S.AuctionID = A.AuctionID AND A.ItemID = I.ItemID"
 					+ "GROUP BY I.ItemID"
 					+ "ORDER BY CountItem";
+					*/
+			String query = "SELECT *,COUNT(I.ItemID) CountItem FROM AuctionHistory A, item I WHERE A.ItemID = I.ItemID GROUP BY I.ItemID ORDER BY CountItem DESC LIMIT 10";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Item temp = new Item();
-				temp.setItemID(res.getInt(1));
-				temp.setDescription(res.getString(2));
-				temp.setName(res.getString(3));
-				temp.setType(res.getString(4));
-				temp.setNumCopies(res.getInt(5));
+				temp.setItemID(res.getInt("ItemID"));
+				temp.setDescription(res.getString("Description"));
+				temp.setName(res.getString("Name"));
+				temp.setType(res.getString("Type"));
+				temp.setNumCopies(res.getInt("NumCopies"));
 				items.add(temp);
 			}
 			
