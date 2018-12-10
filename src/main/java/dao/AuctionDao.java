@@ -208,27 +208,49 @@ public class AuctionDao {
 		 * All the objects must be added in the "output" list and returned
 		 */
 		
-		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			
-			bid.setCustomerID("123-12-1234");
-			bid.setBidPrice(120);
-			
-			customer.setCustomerID("123-12-1234");
-			customer.setFirstName("Shiyong");
-			customer.setLastName("Lu");
-			
-			auction.setMinimumBid(100);
-			auction.setBidIncrement(10);
-			auction.setCurrentBid(110);
-			auction.setCurrentHighBid(115);
-			auction.setAuctionID(Integer.parseInt(auctionID));
-		}
-		/*Sample data ends*/
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Item WHERE ItemID = " + itemID;
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+		    if(rs.next()) {
+		    	item.setItemID(rs.getInt("ItemID"));
+		    	item.setDescription(rs.getString("Description"));
+				item.setType(rs.getString("Type"));
+				item.setName(rs.getString("Name"));
+		    }
+		    query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
+		    		+ "AND a.AuctionID = " + auctionID
+		    		+ "GROUP BY a.AuctionID HAVING MAX(b.BidTime)" ;
+		    st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    rs = st.executeQuery(query);
+		    if(rs.next()) {
+		    	bid.setCustomerID(String.valueOf(rs.getInt("CustomerID")));
+		    	bid.setBidPrice((float)rs.getDouble("BidPrice"));
+		    	auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
+		    	auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
+		    	auction.setCurrentBid((int)rs.getDouble("CurrentBid"));
+				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
+				auction.setAuctionID(Integer.parseInt(auctionID));
+		    }
+		    int customerID = rs.getInt("CustomerID");
+		    
+		    query = "SELECT * FROM Person WHERE SSN = " + customerID;
+		    st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    rs = st.executeQuery(query);
+		    if(rs.next()) {
+		    	customer.setCustomerID(String.valueOf(rs.getInt("SSN")));
+		    	customer.setFirstName(rs.getString("FirstName"));
+		    	customer.setLastName(rs.getString("FirstName"));
+		    }
+			}catch(Exception e) {
+				System.out.println(e.getMessage());;
+				return null;
+			}
+	
 		
 		output.add(item);
 		output.add(bid);
