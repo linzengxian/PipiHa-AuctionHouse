@@ -112,10 +112,34 @@ public class CustomerDao {
 
 		/*Sample data begins*/
 		Customer customer = new Customer();
-		customer.setCustomerID("111-11-1111");
-		customer.setLastName("Lu");
-		customer.setFirstName("Shiyong");
-		customer.setEmail("shiyong@cs.sunysb.edu");
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT BuyerID, SUM(BidingPrice) AS Revenue FROM AuctionHistory GROUP BY BuyerID ORDER BY Revenue DESC LIMIT 1" ;
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			if(rs.next()) {
+				int customerID = rs.getInt("BuyerID");
+				query = "SELECT * FROM Person p WHERE p.SSN =" + customerID;
+				rs = st.executeQuery(query);
+				if(rs.next()) {
+					customer.setCustomerID(rs.getString("SSN"));
+					customer.setLastName(rs.getString("LastName"));
+					customer.setFirstName(rs.getString("FirstName"));
+					customer.setEmail(rs.getString("Email"));
+				}else {
+					return null;
+				}
+			}else {
+				return null;
+			}
+		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		/*Sample data ends*/
 	
 		return customer;
