@@ -43,14 +43,15 @@ public class BidDao {
 				temp.setAuctionID(res.getInt("AuctionID"));
 				temp.setBidPrice((int)res.getDouble("BidPrice"));
 				temp.setBidTime(String.valueOf(res.getTimestamp("BidTime")));
-				temp.setCustomerID(String.valueOf(res.getInt("BuyerID")));
+				temp.setCustomerID(String.valueOf(res.getInt("CustomerID")));
 				temp.setMaxBid((int)res.getDouble("CurrentHighBid"));
 				bids.add(temp);
 			//System.out.println("id of the customers: "+temp.getCustomerID());
 			}
 		}
 		}catch(Exception e) {
-			System.out.println(e);
+			
+			System.out.println("xxxx"+e);
 			return null;
 		}
 		

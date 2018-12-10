@@ -28,7 +28,7 @@ public class AuctionDao {
 		/*Sample data begins*/
 		try {
 		Connection con = DBUtil.getConnection();
-	    String query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID" ;
+	    String query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID ORDER BY b.BidTime DESC LIMIT 1 " ;
 	    // create the java statement
 	    Statement st = con.createStatement();
 	      // execute the query, and get a java resultset
