@@ -296,19 +296,48 @@ public class CustomerDao {
 
 		List<Customer> customers = new ArrayList<Customer>();
 		
-		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
-			Customer customer = new Customer();
-			customer.setCustomerID("111-11-1111");
-			customer.setAddress("123 Success Street");
-			customer.setLastName("Lu");
-			customer.setFirstName("Shiyong");
-			customer.setCity("Stony Brook");
-			customer.setState("NY");
-			customer.setEmail("shiyong@cs.sunysb.edu");
-			customer.setZipCode(11790);
-			customers.add(customer);			
+		Connection con = null;
+	
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT SSN,Address,LastName,FirstName,City,State,Email,ZipCode"
+					+ " FROM AuctionHistory,Person WHERE SSN = SellerID";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			if( res.next ()) {
+				Customer customer = new Customer();
+				customer.setCustomerID(res.getString(1));
+				customer.setAddress(res.getString(2));
+				customer.setLastName(res.getString(3));
+				customer.setFirstName(res.getString(4));
+				customer.setCity(res.getString(5));
+				customer.setState(res.getString(6));
+				customer.setEmail(res.getString(7));
+				customer.setZipCode(res.getInt(8));
+				customers.add(customer);		
+
+			}else {
+				System.out.println("unknown Seller");
+			}
+		}catch(Exception e) {
+			System.out.println(e);
+			
 		}
+		
+	
+		/*Sample data begins*/
+//		for (int i = 0; i < 10; i++) {
+//			Customer customer = new Customer();
+//			customer.setCustomerID("111-11-1111");
+//			customer.setAddress("123 Success Street");
+//			customer.setLastName("Lu");
+//			customer.setFirstName("Shiyong");
+//			customer.setCity("Stony Brook");
+//			customer.setState("NY");
+//			customer.setEmail("shiyong@cs.sunysb.edu");
+//			customer.setZipCode(11790);
+//			customers.add(customer);			
+//		}
 		/*Sample data ends*/
 		
 		return customers;
