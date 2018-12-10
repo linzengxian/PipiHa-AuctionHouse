@@ -189,10 +189,10 @@ public class ItemDao {
 			con = DBUtil.getConnection();	
 			String query = "SELECT S.ItemID,S.Name,S.Description,S.Type,S.NumCopies FROM Item S WHERE S.Type IN "
 					+ "( SELECT i.Type FROM Item i WHERE i.ItemID IN( SELECT ItemID FROM AuctionHistory  WHERE BuyerID = ? ))"
-					+ "  ORDER BY Rand() Limit 3";
+					+ " AND (S.ItemID NOT IN( SELECT A.ItemID FROM AuctionHistory A WHERE BuyerID = ?)) ORDER BY Rand() Limit 3";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
-			//ps.setString(2, target);
+			ps.setString(2, target);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Item item = new Item();
