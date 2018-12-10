@@ -328,7 +328,7 @@ public class ItemDao {
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
+			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement,AuctionID"
 					+ " FROM Item,Auction where Item.Name LIKE'%"+target+"%' and Item.ItemID=Auction.ItemID and Auction.AuctionID NOT IN (SELECT AuctionID from AuctionHistory)";
 			PreparedStatement ps = con.prepareStatement (query);
 			//ps.setString(1, target);
@@ -343,6 +343,7 @@ public class ItemDao {
 				items.add(temp);
 				
 				Auction auction = new Auction();
+				auction.setAuctionID(res.getInt("AuctionID"));
 				auction.setMinimumBid(res.getFloat(6));
 				auction.setBidIncrement(res.getFloat(7));
 				auctions.add(auction);

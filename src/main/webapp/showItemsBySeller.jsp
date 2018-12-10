@@ -62,14 +62,7 @@ body {
 		         <td>${bids[loop.index].customerID}</td>
 		         <td>${auctions[loop.index].minimumBid}</td>
 		         <td>${auctions[loop.index].bidIncrement}</td>
-		         <td>
-    	         	<form method="POST" action="bidInAuction">
-						<div class="form-group">
-			            	<input type="hidden" class="form-control" name="auctionID" value=${auctions[loop.index].auctionID}>
-			            	<input type="hidden" class="form-control" name="itemID" value=${items[loop.index].itemID}>
-			        	</div>
-						<input type="submit" value="Bid" class="btn btn-success"/>
-					</form>		         
+		         <td>         
 		         </td>
 		       </tr>
 		     </c:forEach>
