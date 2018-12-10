@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,22 +119,72 @@ public class BidDao {
 		 */
 		Bid bid = new Bid();
 		Connection con = DBUtil.getConnection();
-		System.out.println(currentBid + "  " + maxBid);
 		if(maxBid < currentBid) {
 			return null;
 		}
-		String query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
-				+ " values (?,?,?,?,?,?)";
-		 PreparedStatement preparedStmt;
+		System.out.println(auctionID);
 		try {
+		String query = "SELECT BidIncrement FROM Auction WHERE AuctionID = " + auctionID;
+		Statement st = con.createStatement();
+	      // execute the query, and get a java resultset
+	    ResultSet rs = st.executeQuery(query);
+	    rs.next();
+	    double bidIncrement = rs.getDouble("BidIncrement");
+		query = "SELECT * FROM Bid WHERE AuctionID = " + auctionID + " ORDER BY CurrentBid DESC limit 1";
+		st = con.createStatement();
+	      // execute the query, and get a java resultset
+	    rs = st.executeQuery(query);
+		if(rs.next()) {
+			double oldMax = rs.getDouble("CurrentBid");
+			int oldCustomerID = rs.getInt("CustomerID");
+			if(oldMax < maxBid) {
+				if(oldMax + bidIncrement < maxBid) {
+					currentBid = (float)(oldMax + bidIncrement);
+				}else {
+					currentBid = maxBid;
+				}
+				query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
+						+ " values (?,?,?,?,?,?)";
+				 	PreparedStatement preparedStmt;
+					preparedStmt = con.prepareStatement(query);
+					preparedStmt.setInt (1,Integer.parseInt(customerID));
+					preparedStmt.setInt (2, Integer.parseInt(auctionID));
+				    preparedStmt.setInt (3, Integer.parseInt(itemID));
+				    preparedStmt.setDouble (4, currentBid);
+				    preparedStmt.setDouble (5, currentBid);
+				    preparedStmt.setDouble (6, maxBid);
+				    preparedStmt.execute(); 
+			}else {
+				if(maxBid + bidIncrement <= oldMax) {
+					currentBid = (float)(maxBid + bidIncrement);
+				}else {
+					currentBid = (float)oldMax;
+				}
+				query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
+						+ " values (?,?,?,?,?,?)";
+				 PreparedStatement preparedStmt;
+					preparedStmt = con.prepareStatement(query);
+					preparedStmt.setInt (1,oldCustomerID);
+					preparedStmt.setInt (2, Integer.parseInt(auctionID));
+				    preparedStmt.setInt (3, Integer.parseInt(itemID));
+				    preparedStmt.setDouble (4, currentBid);
+				    preparedStmt.setDouble (5, currentBid);
+				    preparedStmt.setDouble (6, oldMax);
+				    preparedStmt.execute();
+			}
+		}else {
+			query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
+				+ " values (?,?,?,?,?,?)";
+			PreparedStatement preparedStmt;
 			preparedStmt = con.prepareStatement(query);
 			preparedStmt.setInt (1,Integer.parseInt(customerID));
 			preparedStmt.setInt (2, Integer.parseInt(auctionID));
 		    preparedStmt.setInt (3, Integer.parseInt(itemID));
 		    preparedStmt.setDouble (4, currentBid);
-		    preparedStmt.setDouble (5, maxBid);
-		    preparedStmt.setDouble (6, currentBid);
-		    preparedStmt.execute();    
+		    preparedStmt.setDouble (5, currentBid);
+		    preparedStmt.setDouble (6, maxBid);
+		    preparedStmt.execute(); 
+		}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
