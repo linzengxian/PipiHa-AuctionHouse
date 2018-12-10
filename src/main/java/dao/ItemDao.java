@@ -362,14 +362,15 @@ public class ItemDao {
 		List<Item> items = new ArrayList<Item>();
 		List<Auction> auctions = new ArrayList<Auction>();
 		
+		System.out.println(itemType);
 		Connection con = null;
 		String target = itemType;
 		int item_id=0;
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT A.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
-					+ " FROM Item I,Auction A where I.Type=? AND I.ItemID=A.ItemID AND I.ItemID NOT IN (SELECT H.ItemID from AuctionHistory H)";
+			String query = "SELECT A.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement,AuctionID"
+					+ " FROM Item I,Auction A where I.Type=? AND I.ItemID=A.ItemID AND A.AuctionID NOT IN (SELECT H.AuctionID from AuctionHistory H)";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
@@ -383,6 +384,7 @@ public class ItemDao {
 				items.add(temp);
 				
 				Auction auction = new Auction();
+				auction.setAuctionID(res.getInt("AuctionID"));
 				auction.setMinimumBid(res.getFloat(6));
 				auction.setBidIncrement(7);
 				auctions.add(auction);

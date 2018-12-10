@@ -46,7 +46,6 @@ public class SubmitBidController extends HttpServlet {
 		String itemID = request.getParameter("itemID");
 		Float currentBid = Float.parseFloat(request.getParameter("currentBid"));
 		Float maxBid = Float.parseFloat(request.getParameter("maxBid"));
-		
 		BidDao bidDao = new BidDao();
 		Bid bid = bidDao.submitBid(auctionID, itemID, currentBid, maxBid, customerID);
 		

@@ -223,7 +223,7 @@ public class AuctionDao {
 		    }
 		    query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
 		    		+ "AND a.AuctionID = " + auctionID
-		    		+ "GROUP BY a.AuctionID HAVING MAX(b.BidTime)" ;
+		    		+ " ORDER BY b.BidTime DESC LIMIT 1" ;
 		    st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    rs = st.executeQuery(query);

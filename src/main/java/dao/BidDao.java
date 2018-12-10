@@ -102,7 +102,7 @@ public class BidDao {
 		return bids;
 	}
 
-	public String submitBid(String auctionID, String itemID, Float currentBid, Float maxBid, String customerID) {
+	public Bid submitBid(String auctionID, String itemID, Float currentBid, Float maxBid, String customerID) {
 		
 
 		/*
@@ -115,27 +115,29 @@ public class BidDao {
 		 * Query to submit a bid by a customer, indicated by customerID, must be implemented
 		 * After inserting the bid data, return the bid details encapsulated in "bid" object
 		 */
-
+		Bid bid = new Bid();
 		Connection con = DBUtil.getConnection();
-		String query = "INSERT INTO Bid(AuctionID, BidPrice, ItemID,CustomerID)"
-				+ " values (?,?,?,?)";
+		System.out.println(currentBid + "  " + maxBid);
+		String query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
+				+ " values (?,?,?,?,?,?)";
 		 PreparedStatement preparedStmt;
 		try {
 			preparedStmt = con.prepareStatement(query);
-			preparedStmt.setString (1, auctionID);
-		      preparedStmt.setString (2, itemID);
-		      preparedStmt.setFloat (3, currentBid);
-		      preparedStmt.setString (4,customerID);
-		      preparedStmt.execute();
-		      
+			preparedStmt.setInt (1,Integer.parseInt(customerID));
+			preparedStmt.setInt (2, Integer.parseInt(auctionID));
+		    preparedStmt.setInt (3, Integer.parseInt(itemID));
+		    preparedStmt.setDouble (4, currentBid);
+		    preparedStmt.setDouble (5, maxBid);
+		    preparedStmt.setDouble (6, currentBid);
+		    preparedStmt.execute();    
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("invalid account information");
-			return "failure";
+			return null;
 		}
 		/*Sample data begins*/
-		return "success";
+		return bid;
 		/*Sample data ends*/
 		
 
