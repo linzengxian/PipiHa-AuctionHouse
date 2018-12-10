@@ -177,22 +177,32 @@ public class ItemDao {
 		
 		String target = customerID;
 		 Connection con = null;
+//		 String view = @"CREATE VIEW Bought(CustomerID, ItemID, ItemType) "
+//		 		+ "SELECT B1.CustomerID, I.ItemID, I.Type AS ItemType FROM Bid B1, Item I, Auction A "
+//		 		+ "WHERE B1.AuctionID = A.AuctionID AND A.ItemID = I.ItemID AND B1.BidTime > 'Today' "
+//		 		+ "AND B1.BidPrice >= ALL (SELECT B2.BidPrice FROM Bid B2 WHERE B1.AuctionID = B2.AuctionID)"
+//		 	
+		 
 		 
 		 
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT S.ItemID,S.Name,S.Description FROM Item S WHERE S.Type IN "
+			String query = "SELECT S.ItemID,S.Name,S.Description,S.Type,S.NumCopies FROM Item S WHERE S.Type IN "
 					+ "( SELECT i.Type FROM Item i WHERE i.ItemID IN( SELECT ItemID FROM AuctionHistory  WHERE BuyerID = ? ))"
-					+ " AND (S.ItemID NOT IN( SELECT A.ItemID FROM AuctionHistory A WHERE BuyerID = ?)) ORDER BY Rand() Limit 3";
+					+ "  ORDER BY Rand() Limit 3";
 			PreparedStatement ps = con.prepareStatement (query);
 			ps.setString(1, target);
-			ps.setString(2, target);
+			//ps.setString(2, target);
 			ResultSet res = ps.executeQuery ();
-			if( res.next ()) {
+			while( res.next ()) {
 				Item item = new Item();
+				item.setItemID(res.getInt(1));
+				item.setName(res.getString(2));
+				item.setDescription(res.getString(3));
+				item.setType(res.getString(4));
+				item.setNumCopies(res.getInt(5));
+				items.add(item);
 				
-			}else {
-				System.out.println("Didn't find the corresponding customer with that username");
 			}
 			
 		}catch(Exception e) {
