@@ -122,7 +122,6 @@ public class BidDao {
 		if(maxBid < currentBid) {
 			return null;
 		}
-		System.out.println(auctionID);
 		try {
 		String query = "SELECT BidIncrement FROM Auction WHERE AuctionID = " + auctionID;
 		Statement st = con.createStatement();
@@ -154,6 +153,9 @@ public class BidDao {
 				    preparedStmt.setDouble (5, currentBid);
 				    preparedStmt.setDouble (6, maxBid);
 				    preparedStmt.execute(); 
+				    bid.setAuctionID(Integer.parseInt(auctionID));
+					bid.setCustomerID(customerID);
+					bid.setBidPrice(currentBid);
 			}else {
 				if(maxBid + bidIncrement <= oldMax) {
 					currentBid = (float)(maxBid + bidIncrement);
@@ -171,6 +173,9 @@ public class BidDao {
 				    preparedStmt.setDouble (5, currentBid);
 				    preparedStmt.setDouble (6, oldMax);
 				    preparedStmt.execute();
+				    bid.setAuctionID(Integer.parseInt(auctionID));
+					bid.setCustomerID(customerID);
+					bid.setBidPrice(currentBid);
 			}
 		}else {
 			query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
@@ -184,6 +189,9 @@ public class BidDao {
 		    preparedStmt.setDouble (5, currentBid);
 		    preparedStmt.setDouble (6, maxBid);
 		    preparedStmt.execute(); 
+		    bid.setAuctionID(Integer.parseInt(auctionID));
+			bid.setCustomerID(customerID);
+			bid.setBidPrice(currentBid);
 		}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

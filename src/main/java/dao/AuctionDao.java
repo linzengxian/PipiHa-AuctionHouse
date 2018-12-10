@@ -227,7 +227,16 @@ public class AuctionDao {
 		    st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    rs = st.executeQuery(query);
+		    int customerID;
 		    if(rs.next()) {
+		    	
+		    	query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
+			    		+ "AND a.AuctionID = " + auctionID
+			    		+ " ORDER BY b.BidTime DESC LIMIT 1" ;
+			    st = con.createStatement();
+			      // execute the query, and get a java resultset
+			    rs = st.executeQuery(query);
+			    
 		    	bid.setCustomerID(String.valueOf(rs.getInt("CustomerID")));
 		    	bid.setBidPrice((float)rs.getDouble("BidPrice"));
 		    	auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
@@ -235,21 +244,21 @@ public class AuctionDao {
 		    	auction.setCurrentBid((int)rs.getDouble("BidPrice"));
 				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
 				auction.setAuctionID(Integer.parseInt(auctionID));
+				customerID = rs.getInt("CustomerID");
+				query = "SELECT * FROM Person WHERE SSN = " + customerID;
+			    st = con.createStatement();
+			      // execute the query, and get a java resultset
+			    rs = st.executeQuery(query);
+			    if(rs.next()) {
+			    	customer.setCustomerID(String.valueOf(rs.getInt("SSN")));
+			    	customer.setFirstName(rs.getString("FirstName"));
+			    	customer.setLastName(rs.getString("FirstName"));
 		    }
-		    int customerID = rs.getInt("CustomerID");
-		    
-		    query = "SELECT * FROM Person WHERE SSN = " + customerID;
-		    st = con.createStatement();
-		      // execute the query, and get a java resultset
-		    rs = st.executeQuery(query);
-		    if(rs.next()) {
-		    	customer.setCustomerID(String.valueOf(rs.getInt("SSN")));
-		    	customer.setFirstName(rs.getString("FirstName"));
-		    	customer.setLastName(rs.getString("FirstName"));
+		
 		    }
-			}catch(Exception e) {
+		    }catch(Exception e) {
 				System.out.println(e.getMessage());;
-				return null;
+		
 			}
 	
 		
