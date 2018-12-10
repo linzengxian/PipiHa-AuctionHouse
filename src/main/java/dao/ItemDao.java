@@ -104,35 +104,54 @@ public class ItemDao {
 
 		List<Item> items = new ArrayList<Item>();
 		Connection con = null;
+		String target = searchKeyword;
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "CREATE VIEW Sold (CustomerID, AuctionID, SoldPrice)"
-					+ "AS"
-					+ "SELECT B1.CustomerID, B1.AuctionID, B1.BidPrice AS SoldPrice"
-					+ "FROM Bid B1"
-					+ "WHERE B1.BidTime > 'Today' AND B1.BidPrice >="
-					+ "ALL (SELECT B2.BidPrice FROM Bid B2 WHERE B1.AuctionID =B2.AuctionID)"
-					+ "SELECT SUM(S.SoldPrice)"
-					+ "FROM Sold S, Auction A, Item I"
-					+ "WHERE I.Name = '?' AND S.AuctionID = A.AuctionID AND I.ItemID = A.ItemID";
-			PreparedStatement ps = con.prepareStatement (query);
-			ResultSet res = ps.executeQuery ();
-			while( res.next ()) {
+			if(target == null) {
+				String query = "SELECT I.ItemID I.Description I.Name I.Type I.NumCopies AH.BidingPrice FROM Item I, AuctionHistory AH WHERE AH.ItemID = I.ItemID";
+				PreparedStatement ps = con.prepareStatement (query);
+				ResultSet res = ps.executeQuery ();
+				while( res.next ()) {
 				Item temp = new Item();
 				temp.setItemID(res.getInt(1));
 				temp.setDescription(res.getString(2));
 				temp.setName(res.getString(3));
 				temp.setType(res.getString(4));
 				temp.setNumCopies(res.getInt(5));
+				temp.setSoldPrice((int)res.getFloat(5));
 				items.add(temp);
+				}
+				
+			}else if(target.equals("")) {
+				return items;
 			}
-			
-		}catch(Exception e) {
-			System.out.println(e);	
+			else
+			{
+			String query = "SELECT I.ItemID I.Description I.Name I.Type I.NumCopies AH.BidingPrice FROM Item I, AuctionHistory AH WHERE AH.ItemID = I.ItemID AND ("
+					+  "I.ItemID LIKE '%"+target+"%'"
+					+ " OR I.Type LIKE '%"+target+"%'"
+					+ " OR I.Name LIKE '%"+target+"%')";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+			Customer temp = new Customer();
+			Item temp1 = new Item();
+			temp1.setItemID(res.getInt(1));
+			temp1.setDescription(res.getString(2));
+			temp1.setName(res.getString(3));
+			temp1.setType(res.getString(4));
+			temp1.setNumCopies(res.getInt(5));
+			temp1.setSoldPrice((int)res.getFloat(5));
+			items.add(temp1);
+			//System.out.println("id of the customers: "+temp.getCustomerID());
+			}
 		}
-		/*Sample data ends*/
-		
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
+
 		return items;
 
 	}
@@ -292,21 +311,36 @@ public class ItemDao {
 		List<Auction> auctions = new ArrayList<Auction>();
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			items.add(item);
-			
-			Auction auction = new Auction();
-			auction.setMinimumBid(100);
-			auction.setBidIncrement(10);
-			auctions.add(auction);
-		}
-		/*Sample data ends*/
+		Connection con = null;
+		String target = itemName;
+		int item_id=0;
 		
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncremente"
+					+ " FROM Item,Auction where Item.Name=? and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(3, target);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+				
+				Auction auction = new Auction();
+				auction.setMinimumBid(res.getFloat(6));
+				auction.setBidIncrement(7);
+				auctions.add(auction);
+			
+			}
+		}catch(Exception e) {
+			System.out.println(e);	
+		}
+
 		output.add(items);
 		output.add(auctions);
 		
