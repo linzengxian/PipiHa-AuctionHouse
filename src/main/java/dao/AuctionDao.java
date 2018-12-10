@@ -1,8 +1,13 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdbc.DBUtil;
 import model.Auction;
 import model.Bid;
 import model.Customer;
@@ -21,18 +26,28 @@ public class AuctionDao {
 		 */
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 10; i++) {
+		try {
+		Connection con = DBUtil.getConnection();
+	    String query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID" ;
+	    // create the java statement
+	    Statement st = con.createStatement();
+	      // execute the query, and get a java resultset
+	    ResultSet rs = st.executeQuery(query);
+		while(rs.next()) {
 			Auction auction = new Auction();
-			auction.setAuctionID(1);
-			auction.setBidIncrement(10);
-			auction.setMinimumBid(10);
-			auction.setCopiesSold(12);
-			auction.setItemID(1234);
-			auction.setClosingBid(120);
-			auction.setCurrentBid(120);
-			auction.setCurrentHighBid(120);
-			auction.setReserve(10);
+			auction.setAuctionID(rs.getInt("AuctionID"));
+			auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
+			auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
+			auction.setCopiesSold(rs.getInt("Copies_Sold"));
+			auction.setItemID(rs.getInt("ItemID"));
+			auction.setClosingBid((int)rs.getDouble("CurrentBid"));
+			auction.setCurrentBid((int)rs.getDouble("CurrentBid"));
+			auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
+			auction.setReserve((int)rs.getDouble("Reserve"));
 			auctions.add(auction);
+		}
+		}catch(Exception e) {
+			return null;
 		}
 		/*Sample data ends*/
 		
@@ -52,19 +67,29 @@ public class AuctionDao {
 		 */
 		
 		/*Sample data begins*/
-		for (int i = 0; i < 5; i++) {
-			Auction auction = new Auction();
-			auction.setAuctionID(1);
-			auction.setBidIncrement(10);
-			auction.setMinimumBid(10);
-			auction.setCopiesSold(12);
-			auction.setItemID(1234);
-			auction.setClosingBid(120);
-			auction.setCurrentBid(120);
-			auction.setCurrentHighBid(120);
-			auction.setReserve(10);
-			auctions.add(auction);
-		}
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID" ;
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				Auction auction = new Auction();
+				auction.setAuctionID(rs.getInt("AuctionID"));
+				auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
+				auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
+				auction.setCopiesSold(rs.getInt("Copies_Sold"));
+				auction.setItemID(rs.getInt("ItemID"));
+				auction.setClosingBid((int)rs.getDouble("CurrentBid"));
+				auction.setCurrentBid((int)rs.getDouble("CurrentBid"));
+				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
+				auction.setReserve((int)rs.getDouble("Reserve"));
+				auctions.add(auction);
+			}
+			}catch(Exception e) {
+				return null;
+			}
 		/*Sample data ends*/
 		
 		return auctions;
@@ -80,21 +105,33 @@ public class AuctionDao {
 		 * Query to get data about all the open auctions monitored by a customer representative should be implemented
 		 * employeeEmail is the email ID of the customer representative, which is given as method parameter
 		 */
-		
 		/*Sample data begins*/
-		for (int i = 0; i < 5; i++) {
-			Auction auction = new Auction();
-			auction.setAuctionID(1);
-			auction.setBidIncrement(10);
-			auction.setMinimumBid(10);
-			auction.setCopiesSold(12);
-			auction.setItemID(1234);
-			auction.setClosingBid(120);
-			auction.setCurrentBid(120);
-			auction.setCurrentHighBid(120);
-			auction.setReserve(10);
-			auctions.add(auction);
-		}
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
+		    		+ "AND a.AuctionID NOT IN "
+		    		+ "(SELECT AuctionID FROM AuctionHistory)"
+		    		+ "GROUP BY a.AuctionID HAVING MAX(b.BidTime)" ;
+		    // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				Auction auction = new Auction();
+				auction.setAuctionID(rs.getInt("AuctionID"));
+				auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
+				auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
+				auction.setCopiesSold(rs.getInt("Copies_Sold"));
+				auction.setItemID(rs.getInt("ItemID"));
+				auction.setClosingBid((int)rs.getDouble("CurrentBid"));
+				auction.setCurrentBid((int)rs.getDouble("CurrentBid"));
+				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
+				auction.setReserve((int)rs.getDouble("Reserve"));
+				auctions.add(auction);
+			}
+			}catch(Exception e) {
+				return null;
+			}
 		/*Sample data ends*/
 		
 		return auctions;
@@ -110,6 +147,38 @@ public class AuctionDao {
 		 * auctionID is the Auction's ID, given as method parameter
 		 * The method should return a "success" string if the update is successful, else return "failure"
 		 */
+		try {
+			Connection con = DBUtil.getConnection();
+		    String query = "SELECT * FROM Auction a, Bid b, Post p WHERE a.AuctionID = b.AuctionID AND p.AuctionID = a.AuctionID "
+		    		+ " AND a.AuctionID = " + auctionID 
+		    		+ " ORDER BY b.BidTime DESC LIMIT 1" ;
+		    // create the java statement
+		 // create the java statement
+		    Statement st = con.createStatement();
+		      // execute the query, and get a java resultset
+		    ResultSet rs = st.executeQuery(query);
+		    PreparedStatement preparedStmt;
+			if(rs.next()) {
+				System.out.println(rs.getDate("BidTime"));
+				query = "INSERT INTO AuctionHistory(AuctionID, ItemID, SellerID, BuyerID,EmployeeID,Date,BidingPrice)"
+						+ " values (?,?,?,?,?,?,?)";
+				preparedStmt = con.prepareStatement(query);
+				preparedStmt.setInt(1,rs.getInt("AuctionID"));
+				preparedStmt.setInt(2,rs.getInt("ItemID"));
+				preparedStmt.setInt(3,rs.getInt("p.CustomerID"));
+				preparedStmt.setInt(4,rs.getInt("b.CustomerID"));
+				preparedStmt.setInt(5,rs.getInt("Monitor"));
+				preparedStmt.setTimestamp(6, rs.getTimestamp("BidTime"));
+				preparedStmt.setDouble(7,rs.getDouble("BidPrice"));
+				if(!preparedStmt.execute()) {
+					return "failure";
+				}
+				
+			}
+			}catch(Exception e) {
+				System.out.println(e.getMessage());;
+				return "failure";
+			}
 		/* Sample data begins */
 		return "success";
 		/* Sample data ends */
