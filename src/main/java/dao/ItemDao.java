@@ -285,7 +285,7 @@ public class ItemDao {
 		
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT * FROM Item I";
+			String query = "SELECT ItemID,Description,Name,DISTINCT Type,NumCopies FROM Item I";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
@@ -344,7 +344,7 @@ public class ItemDao {
 				
 				Auction auction = new Auction();
 				auction.setMinimumBid(res.getFloat(6));
-				auction.setBidIncrement(7);
+				auction.setBidIncrement(res.getFloat(7));
 				auctions.add(auction);
 			
 			}
@@ -398,7 +398,7 @@ public class ItemDao {
 				Auction auction = new Auction();
 				auction.setAuctionID(res.getInt("AuctionID"));
 				auction.setMinimumBid(res.getFloat(6));
-				auction.setBidIncrement(7);
+				auction.setBidIncrement(res.getFloat(7));
 				auctions.add(auction);
 			}
 		}catch(Exception e) {
