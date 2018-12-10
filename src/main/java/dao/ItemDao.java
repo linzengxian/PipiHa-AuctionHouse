@@ -232,7 +232,7 @@ public class ItemDao {
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement,A.AuctionID,Count(I.ItemID) AS CountItem"
+			String query = "SELECT I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement,Count(I.ItemID) AS CountItem"
 					+ " FROM Item I,Post P,Auction A,Bid B WHERE A.AuctionID = P.AuctionID AND A.ItemID=I.ItemID AND B.AuctionID = P.AuctionID AND P.CustomerID=?"
 					+ " GROUP BY I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement"
 					+ " ORDER BY CountItem DESC";
@@ -250,14 +250,11 @@ public class ItemDao {
 				Bid bid = new Bid();
 				bid.setCustomerID(res.getString(6));
 				bid.setBidPrice(res.getFloat(5));
-				bid.setAuctionID(res.getInt(9));
 				bids.add(bid);
 				
 				Auction auction = new Auction();
 				auction.setMinimumBid(res.getFloat(7));
 				auction.setBidIncrement(res.getFloat(8));
-				auction.setAuctionID(res.getInt(9));
-				auction.setItemID(res.getInt(1));
 				auctions.add(auction);
 			
 			}
