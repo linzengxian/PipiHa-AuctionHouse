@@ -145,7 +145,6 @@ public class ItemDao {
 		 * customerID, which is the Customer's ID for whom the item suggestions are fetched, is given as method parameter
 		 * Each record is required to be encapsulated as a "Item" class object and added to the "items" ArrayList
 		 */
-
 		List<Item> items = new ArrayList<Item>();
 		
 		/*Sample data begins*/
@@ -244,12 +243,33 @@ public class ItemDao {
 		
 		List<Item> items = new ArrayList<Item>();
 		
-		/*Sample data begins*/
-		for (int i = 0; i < 6; i++) {
-			Item item = new Item();
-			item.setType("BOOK");
-			items.add(item);
+			Connection con = null;
+		
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT * FROM Item I";
+			PreparedStatement ps = con.prepareStatement (query);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);	
 		}
+		
+		/*Sample data begins*/
+//		for (int i = 0; i < 6; i++) {
+//			Item item = new Item();
+//			item.setType("BOOK");
+//			items.add(item);
+//		}
 		/*Sample data ends*/
 		
 		return items;
@@ -308,21 +328,54 @@ public class ItemDao {
 		List output = new ArrayList();
 		List<Item> items = new ArrayList<Item>();
 		List<Auction> auctions = new ArrayList<Auction>();
+		
+		Connection con = null;
+		String target = itemType;
+		int item_id=0;
+		
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT Item.ItemID,Description,Name,Type,NumCopies,MinimuBid,BidIncrement"
+					+ " FROM Item,Auction where Item.Type=? and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+				
+				Auction auction = new Auction();
+				auction.setMinimumBid(res.getFloat(6));
+				auction.setBidIncrement(7);
+				auctions.add(auction);
+			
+			}
+		
+			
+		}catch(Exception e) {
+			System.out.println(e);	
+		}
+		
 				
 		/*Sample data begins*/
-		for (int i = 0; i < 4; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			items.add(item);
-			
-			Auction auction = new Auction();
-			auction.setMinimumBid(100);
-			auction.setBidIncrement(10);
-			auctions.add(auction);
-		}
+//		for (int i = 0; i < 4; i++) {
+//			Item item = new Item();
+//			item.setItemID(123);
+//			item.setDescription("sample description");
+//			item.setType("BOOK");
+//			item.setName("Sample Book");
+//			items.add(item);
+//			
+//			Auction auction = new Auction();
+//			auction.setMinimumBid(100);
+//			auction.setBidIncrement(10);
+//			auctions.add(auction);
+//		}
 		/*Sample data ends*/
 		
 		output.add(items);
