@@ -75,7 +75,7 @@ public class ItemDao {
 					+ "GROUP BY I.ItemID"
 					+ "ORDER BY CountItem";
 			PreparedStatement ps = con.prepareStatement (query);
-			ResultSet res = ps.executeQuery ();
+			ResultSet res = ps.executeQuery();
 			while( res.next ()) {
 				Item temp = new Item();
 				temp.setItemID(res.getInt(1));
@@ -109,7 +109,7 @@ public class ItemDao {
 		try {
 			con = DBUtil.getConnection();	
 			if(target == null) {
-				String query = "SELECT I.ItemID I.Description I.Name I.Type I.NumCopies AH.BidingPrice FROM Item I, AuctionHistory AH WHERE AH.ItemID = I.ItemID";
+				String query = "SELECT I.ItemID,I.Description,I.Name,I.Type,I.NumCopies,AH.BidingPrice FROM Item I, AuctionHistory AH WHERE AH.ItemID = I.ItemID";
 				PreparedStatement ps = con.prepareStatement (query);
 				ResultSet res = ps.executeQuery ();
 				while( res.next ()) {
@@ -128,11 +128,15 @@ public class ItemDao {
 			}
 			else
 			{
-			String query = "SELECT I.ItemID I.Description I.Name I.Type I.NumCopies AH.BidingPrice FROM Item I, AuctionHistory AH WHERE AH.ItemID = I.ItemID AND ("
-					+  "I.ItemID LIKE '%"+target+"%'"
+			String query = "SELECT I.ItemID,I.Description,I.Name,I.Type,I.NumCopies,AH.BidingPrice FROM Item I, AuctionHistory AH,Person P WHERE AH.ItemID = I.ItemID "
+					+ "AND P.SSN = AH.SellerID AND ("
+					+ " P.LastName LIKE '%"+target+"%'"
+					+ " OR P.FirstName LIKE '%"+target+"%'"
+					+ " OR I.ItemID = ?"
 					+ " OR I.Type LIKE '%"+target+"%'"
 					+ " OR I.Name LIKE '%"+target+"%')";
 			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 			Item temp1 = new Item();
@@ -221,12 +225,14 @@ public class ItemDao {
 		
 		/*Sample data begins*/
 		Connection con = null;
-
+		String target = sellerID;
 		/*Sample data begins*/
 		try {
 			con = DBUtil.getConnection();	
-			String query = "SELECT";
+			String query = "SELECT Item.ItemID,Item.Description,Item.Name,Item.Type,Bid.CurrentHighBid,Bid.CustomerID,Auction.MinimuBid,Auction.BidIncrement"
+					+ " FROM Item,Auction,Bid,Post where Post.CustomerID = ? and Post.AuctionID = Auction.AuctionID and Item.ItemID=Auction.ItemID and Item.ItemID NOT IN (SELECT ItemID from AuctionHistory)";
 			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Item temp = new Item();
@@ -234,8 +240,18 @@ public class ItemDao {
 				temp.setDescription(res.getString(2));
 				temp.setName(res.getString(3));
 				temp.setType(res.getString(4));
-				temp.setNumCopies(res.getInt(5));
 				items.add(temp);
+				
+				Bid bid = new Bid();
+				bid.setCustomerID(res.getString(6));
+				bid.setBidPrice(res.getFloat(7));
+				bids.add(bid);
+				
+				Auction auction = new Auction();
+				auction.setMinimumBid(res.getFloat(8));
+				auction.setBidIncrement(9);
+				auctions.add(auction);
+			
 			}
 			
 		}catch(Exception e) {
