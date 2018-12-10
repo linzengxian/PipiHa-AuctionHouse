@@ -35,7 +35,7 @@ body {
 	<div id="wrapper" >
 	 <h1>Add Customer:</h1>
 	<div id="inputs">
-	<form action="AddCustomer" method="POST">
+	<form action="Register" method="POST">
 		<div><%	String status = request.getParameter("status");
 		if(status != null) {
 			if(status.equals("false")) {
