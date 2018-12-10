@@ -115,7 +115,7 @@ public class ItemDao {
 					+ "ALL (SELECT B2.BidPrice FROM Bid B2 WHERE B1.AuctionID =B2.AuctionID)"
 					+ "SELECT SUM(S.SoldPrice)"
 					+ "FROM Sold S, Auction A, Item I"
-					+ "WHERE I.Name = 'Book' AND S.AuctionID = A.AuctionID AND I.ItemID = A.ItemID";
+					+ "WHERE I.Name = '?' AND S.AuctionID = A.AuctionID AND I.ItemID = A.ItemID";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
