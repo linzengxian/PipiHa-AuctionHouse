@@ -177,7 +177,8 @@ public class ItemDao {
 		
 		String target = customerID;
 		 Connection con = null;
-	
+		 
+		 
 		try {
 			con = DBUtil.getConnection();	
 			String query = "SELECT S.ItemID,S.Name,S.Description FROM Item S WHERE S.Type IN "
