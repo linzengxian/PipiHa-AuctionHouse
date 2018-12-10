@@ -394,17 +394,43 @@ public class ItemDao {
 		 */
 
 		List<Item> items = new ArrayList<Item>();
-				
+		String target = customerID;
+		
+		Connection con = null;
+		
 		/*Sample data begins*/
-		for (int i = 0; i < 6; i++) {
-			Item item = new Item();
-			item.setItemID(123);
-			item.setDescription("sample description");
-			item.setType("BOOK");
-			item.setName("Sample Book");
-			item.setNumCopies(50);
-			items.add(item);
+		try {
+			con = DBUtil.getConnection();	
+			String query = "SELECT I.ItemID,Description,Name,Type,NumCopies"
+					+ "FROM Item I,AuctionHistory H,Auction A where H.SellerID= ? and I.ItemID=H.ItemID and A.ItemID=I.ItemID "
+					+ "GROUP BY I.ItemID"
+					+ "ORDER BY NumCopies DESC";
+			PreparedStatement ps = con.prepareStatement (query);
+			ps.setString(1, target);
+			ResultSet res = ps.executeQuery ();
+			while( res.next ()) {
+				Item temp = new Item();
+				temp.setItemID(res.getInt(1));
+				temp.setDescription(res.getString(2));
+				temp.setName(res.getString(3));
+				temp.setType(res.getString(4));
+				temp.setNumCopies(res.getInt(5));
+				items.add(temp);
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);	
 		}
+		/*Sample data begins*/
+//		for (int i = 0; i < 6; i++) {
+//			Item item = new Item();
+//			item.setItemID(123);
+//			item.setDescription("sample description");
+//			item.setType("BOOK");
+//			item.setName("Sample Book");
+//			item.setNumCopies(50);
+//			items.add(item);
+//		}
 		/*Sample data ends*/
 		
 		return items;
