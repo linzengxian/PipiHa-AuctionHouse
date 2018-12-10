@@ -208,7 +208,7 @@ public class AuctionDao {
 		 * The auction details must include details about the item, indicated by auctionID
 		 * All the objects must be added in the "output" list and returned
 		 */
-		
+		System.out.println(auctionID + "  " + itemID);
 		try {
 			Connection con = DBUtil.getConnection();
 		    String query = "SELECT * FROM Item WHERE ItemID = " + itemID;
@@ -232,7 +232,7 @@ public class AuctionDao {
 		    	bid.setBidPrice((float)rs.getDouble("BidPrice"));
 		    	auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
 		    	auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
-		    	auction.setCurrentBid((int)rs.getDouble("CurrentBid"));
+		    	auction.setCurrentBid((int)rs.getDouble("BidPrice"));
 				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
 				auction.setAuctionID(Integer.parseInt(auctionID));
 		    }
