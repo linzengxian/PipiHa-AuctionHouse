@@ -13,4 +13,4 @@ add background image, improve login and register web, and rerange the compoent
 
 
 If you click the register button in the login page to register. After register if you see "Some error occurred! Please try again"
-just ignore it. We didn't comment this print out. you can still login.
+just ignore it. We didn't comment this print out. If you change to the login page that means you successfully registered, else you stay on the register page.
