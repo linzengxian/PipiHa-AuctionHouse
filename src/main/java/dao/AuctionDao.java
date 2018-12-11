@@ -203,7 +203,7 @@ public class AuctionDao {
 		 * auctionID is the Auction's ID, given as method parameter
 		 * itemID is the Item's ID, given as method parameter
 		 * The customer details must include details about the current winner of the auction
-		 * The bid details must include details about the current highest bid
+		 * The bid det;ails must include details about the current highest bid
 		 * The item details must include details about the item, indicated by itemID
 		 * The auction details must include details about the item, indicated by auctionID
 		 * All the objects must be added in the "output" list and returned
@@ -215,36 +215,39 @@ public class AuctionDao {
 		    Statement st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    ResultSet rs = st.executeQuery(query);
+		    System.out.println("xxxxxxxxx");
 		    if(rs.next()) {
+		    	System.out.println("xxxxxxxxx");
 		    	item.setItemID(rs.getInt("ItemID"));
 		    	item.setDescription(rs.getString("Description"));
 				item.setType(rs.getString("Type"));
 				item.setName(rs.getString("Name"));
 		    }
-		    query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
-		    		+ "AND a.AuctionID = " + auctionID
-		    		+ " ORDER BY b.BidTime DESC LIMIT 1" ;
+		    System.out.println("xxxxxxxxx");
+		    query = "SELECT * FROM Auction WHERE AuctionID = " + auctionID;
 		    st = con.createStatement();
 		      // execute the query, and get a java resultset
 		    rs = st.executeQuery(query);
 		    int customerID;
+		    System.out.println("xxxxxxxxx");
 		    if(rs.next()) {
-		    	
+		    	auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
+		    	auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
+		    	auction.setAuctionID(Integer.parseInt(auctionID));
 		    	query = "SELECT * FROM Auction a, Bid b WHERE a.AuctionID = b.AuctionID "
 			    		+ "AND a.AuctionID = " + auctionID
 			    		+ " ORDER BY b.BidTime DESC LIMIT 1" ;
+		    	System.out.println("xxxxxxxxx");
 			    st = con.createStatement();
 			      // execute the query, and get a java resultset
 			    rs = st.executeQuery(query);
-			    
+			    if(rs.next()) {
 		    	bid.setCustomerID(String.valueOf(rs.getInt("CustomerID")));
 		    	bid.setBidPrice((float)rs.getDouble("BidPrice"));
-		    	auction.setMinimumBid((float)rs.getDouble("MinimuBid"));
-		    	auction.setBidIncrement((float)rs.getDouble("BidIncrement"));
 		    	auction.setCurrentBid((int)rs.getDouble("BidPrice"));
 				auction.setCurrentHighBid((int)rs.getDouble("CurrentHighBid"));
-				auction.setAuctionID(Integer.parseInt(auctionID));
 				customerID = rs.getInt("CustomerID");
+			    
 				query = "SELECT * FROM Person WHERE SSN = " + customerID;
 			    st = con.createStatement();
 			      // execute the query, and get a java resultset
@@ -254,11 +257,11 @@ public class AuctionDao {
 			    	customer.setFirstName(rs.getString("FirstName"));
 			    	customer.setLastName(rs.getString("FirstName"));
 		    }
-		
+			    }
 		    }
 		    }catch(Exception e) {
 				System.out.println(e.getMessage());;
-		
+				
 			}
 	
 		
