@@ -423,12 +423,42 @@ public class CustomerDao {
 		 * You need to handle the database update and return "success" or "failure" based on result of the database update.
 		 */
 		Customer temp =customer;
+		Connection con = DBUtil.getConnection();
+		String password = "123456";
+		try {
+			String query = "Select P.Email FROM Person P WHERE P.SSN="+ customer.getCustomerID();
+			Statement st = con.createStatement();
+			ResultSet res = st.executeQuery(query);
+			if(res.next()) {
+				query = "Select A.Password FROM Account A WHERE Email = '"+ res.getString("Email") +"'" ;
+				st = con.createStatement();
+				res = st.executeQuery(query);
+				if(res.next()) {
+					System.out.println("dddd");
+					password = res.getString("Password");
+				}
+			}
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			return "failure";
+		}
 		if(deleteCustomer(customer.getCustomerID()).equals("failure"))
 			return  "failure";
 		if(addCustomer(temp).equals("failure"))
 			return  "failure";
-		
-		
+		try {
+			String query = "INSERT INTO Account(Email,Password,Role)"
+				+ " values (?,?,?)";
+			PreparedStatement preparedStmt;
+			preparedStmt = con.prepareStatement(query);
+			preparedStmt.setString (1, customer.getEmail());
+			preparedStmt.setString (2, password);
+			preparedStmt.setString (3, "customer");
+			preparedStmt.execute();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			return "failure";
+		}
 		/*Sample data begins*/
 		return "success";
 		/*Sample data ends*/
