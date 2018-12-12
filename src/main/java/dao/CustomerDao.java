@@ -321,14 +321,14 @@ public class CustomerDao {
 		List<Customer> customers = new ArrayList<Customer>();
 		
 		Connection con = null;
-	
+		System.out.println("allseller");
 		try {
 			con = DBUtil.getConnection();	
 			String query = "SELECT SSN,Address,LastName,FirstName,City,State,Email,ZipCode"
-					+ " FROM AuctionHistory,Person WHERE SSN = SellerID";
+					+ " FROM Post,Person WHERE SSN = CustomerID GROUP BY CustomerID";
 			PreparedStatement ps = con.prepareStatement (query);
 			ResultSet res = ps.executeQuery ();
-			if( res.next ()) {
+			while( res.next ()) {
 				Customer customer = new Customer();
 				customer.setCustomerID(res.getString(1));
 				customer.setAddress(res.getString(2));
@@ -340,8 +340,6 @@ public class CustomerDao {
 				customer.setZipCode(res.getInt(8));
 				customers.add(customer);		
 
-			}else {
-				System.out.println("unknown Seller");
 			}
 		}catch(Exception e) {
 			System.out.println(e);

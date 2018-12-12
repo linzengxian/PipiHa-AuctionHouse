@@ -123,11 +123,12 @@ public class BidDao {
 			return null;
 		}
 		try {
-		String query = "SELECT BidIncrement FROM Auction WHERE AuctionID = " + auctionID;
+		String query = "SELECT BidIncrement,MinimuBid FROM Auction WHERE AuctionID = " + auctionID;
 		Statement st = con.createStatement();
 	      // execute the query, and get a java resultset
 	    ResultSet rs = st.executeQuery(query);
 	    rs.next();
+	    double minimuBid = rs.getDouble("MinimuBid");
 	    double bidIncrement = rs.getDouble("BidIncrement");
 		query = "SELECT * FROM Bid WHERE AuctionID = " + auctionID + " ORDER BY CurrentBid DESC limit 1";
 		st = con.createStatement();
@@ -178,6 +179,7 @@ public class BidDao {
 					bid.setBidPrice(currentBid);
 			}
 		}else {
+			currentBid = (float)minimuBid;
 			query = "INSERT INTO Bid(CustomerID,AuctionID,ItemID, BidPrice,CurrentHighBid,CurrentBid)"
 				+ " values (?,?,?,?,?,?)";
 			PreparedStatement preparedStmt;
