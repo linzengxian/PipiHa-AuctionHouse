@@ -48,7 +48,7 @@ public class EmployeeDao {
 		      preparedStmt = con.prepareStatement(query);
 		      preparedStmt.setString(1, employee.getStartDate());
 		      preparedStmt.setFloat(2, employee.getHourlyRate());
-		      preparedStmt.setString (3, employee.getLevel());
+		      preparedStmt.setString (3, "customerRepresentative");
 		      preparedStmt.setString (4, employee.getEmployeeID());
 		      preparedStmt.execute();
 		} catch (SQLException e) {

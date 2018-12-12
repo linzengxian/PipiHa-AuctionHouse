@@ -231,7 +231,7 @@ public class ItemDao {
 		 * Each auction record is required to be encapsulated as a "Auction" class object and added to the "auctions" List
 		 * The items, bids and auctions Lists have to be added to the "output" List and returned
 		 */
-
+		System.out.println(sellerID);
 		List output = new ArrayList();
 		List<Item> items = new ArrayList<Item>();
 		List<Bid> bids = new ArrayList<Bid>();
@@ -242,13 +242,14 @@ public class ItemDao {
 		String target = sellerID;
 		/*Sample data begins*/
 		try {
-			con = DBUtil.getConnection();	
-			String query = "SELECT I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement,Count(I.ItemID) AS CountItem"
-					+ " FROM Item I,Post P,Auction A,Bid B WHERE A.AuctionID = P.AuctionID AND A.ItemID=I.ItemID AND B.AuctionID = P.AuctionID AND P.CustomerID=?"
-					+ " GROUP BY I.ItemID,Description,Name,Type,B.CurrentHighBid,B.CustomerID,A.MinimuBid,A.BidIncrement"
-					+ " ORDER BY CountItem DESC";
+			con = DBUtil.getConnection();
+			
+			String query = "SELECT I.ItemID,Description,Name,Type,A.MinimuBid,A.BidIncrement,A.AuctionID"
+					+ " FROM Item I,Post P,Auction A WHERE A.AuctionID = P.AuctionID AND A.ItemID=I.ItemID AND P.CustomerID = " + sellerID
+					+ " AND A.AuctionID NOT IN (SELECT H.AuctionID from AuctionHistory H)";
+					
 			PreparedStatement ps = con.prepareStatement (query);
-			ps.setString(1, target);
+			//ps.setString(1, target);
 			ResultSet res = ps.executeQuery ();
 			while( res.next ()) {
 				Item temp = new Item();
@@ -258,15 +259,26 @@ public class ItemDao {
 				temp.setType(res.getString(4));
 				items.add(temp);
 				
-				Bid bid = new Bid();
-				bid.setCustomerID(res.getString(6));
-				bid.setBidPrice(res.getFloat(5));
-				bids.add(bid);
+				String query1 = "SELECT *"
+						+ " FROM Bid WHERE AuctionID = " +res.getInt(7)
+						+ " ORDER BY BidTime LIMIT 1";
+						
+				PreparedStatement ps1 = con.prepareStatement (query1);
+				ResultSet re1 = ps1.executeQuery ();
+				if(re1.next()) {
+					Bid bid = new Bid();
+					bid.setCustomerID(String.valueOf(re1.getInt("CustomerID")));
+					bid.setBidPrice((float)re1.getDouble("CurrentHighBid"));
+					bids.add(bid);
+				}else {
+					Bid bid = new Bid();
+					bids.add(bid);
+				}
 				
 				Auction auction = new Auction();
-				auction.setMinimumBid(res.getFloat(7));
-				auction.setBidIncrement(res.getFloat(8));
-				auction.setAuctionID(res.getInt(9));
+				auction.setMinimumBid(res.getFloat(5));
+				auction.setBidIncrement(res.getFloat(6));
+				auction.setAuctionID(res.getInt(7));
 				auctions.add(auction);
 			
 			}
